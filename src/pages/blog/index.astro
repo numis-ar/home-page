@@ -1,0 +1,55 @@
+---
+/**
+ * Blog listing: every published note of the `blog` collection, newest first.
+ * Typography only, no images: date, title linking to the note, lead and
+ * byline, with the system's perforation between notes. With no published
+ * note the page still builds and says so in one sentence: an empty blog is a
+ * valid state, not missing data. It is not linked from the header or footer
+ * until a note is published (see `navegacion` in src/data/sitio.ts).
+ */
+import Base from "../../layouts/Base.astro";
+import Autores from "../../components/Autores.astro";
+import Contenedor from "../../components/Contenedor.astro";
+import Hero from "../../components/Hero.astro";
+import Seccion from "../../components/Seccion.astro";
+import { autoresDe, BLOG_BAJADA, BLOG_DESCRIPCION, BLOG_TITULO, fechaISO, fechaLarga, notasVisibles, rutaNota } from "../../data/blog";
+
+const notas = await Promise.all(
+  (await notasVisibles()).map(async (nota) => ({ nota, autores: await autoresDe(nota) })),
+);
+---
+
+<Base title="Blog · Numis" description={BLOG_DESCRIPCION}>
+  <Contenedor>
+    <Hero>
+      <div>
+        <h1 class="display">{BLOG_TITULO}</h1>
+        <p class="lead">{BLOG_BAJADA}</p>
+      </div>
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="papel" aria-label="Notas publicadas">
+    {
+      notas.length > 0 ? (
+        <ol class="notas">
+          {notas.map(({ nota, autores }) => (
+            <li class="nota">
+              <p class="nota__fecha">
+                <time datetime={fechaISO(nota.data.fecha)}>{fechaLarga(nota.data.fecha)}</time>
+                {!nota.data.publicado && " · Borrador"}
+              </p>
+              <h2 class="nota__titulo">
+                <a href={rutaNota(nota)}>{nota.data.titulo}</a>
+              </h2>
+              <p class="nota__bajada">{nota.data.bajada}</p>
+              <Autores autores={autores} class="nota__autores" />
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="texto">Todavía no publicamos notas.</p>
+      )
+    }
+  </Seccion>
+</Base>

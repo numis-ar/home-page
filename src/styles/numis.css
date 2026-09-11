@@ -1,0 +1,26 @@
+/*
+ * Numis design system: single entry stylesheet (imports only).
+ * Copied from .claude/skills/numis-design/styles.css. The tokens, base and
+ * component files are verbatim copies of the design system, except the font
+ * URL in tokens/fonts.css (points at /public/fonts) and the marked
+ * "Local additions" blocks at the end of some files (base/layout.css,
+ * base/type.css, components/estructura.css, components/navegacion.css,
+ * components/proyectos.css, components/ticket.css).
+ * components/montos.css is not imported because no page uses it.
+ */
+@import url("./tokens/fonts.css");
+@import url("./tokens/colors.css");
+@import url("./tokens/typography.css");
+@import url("./tokens/spacing.css");
+@import url("./tokens/shape.css");
+@import url("./tokens/motion.css");
+@import url("./base/reset.css");
+@import url("./base/layout.css");
+@import url("./base/type.css");
+@import url("./components/boton.css");
+@import url("./components/ticket.css");
+@import url("./components/sello.css");
+@import url("./components/estructura.css");
+@import url("./components/proyectos.css");
+@import url("./components/formulario.css");
+@import url("./components/navegacion.css");

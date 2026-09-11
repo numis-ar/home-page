@@ -1,0 +1,23 @@
+:root{
+  --radio-boton:2px;
+  --radio-sello:8px;
+  --radio-nulo:0; /* @kind radius */
+  --borde-fuerte:2.5px solid var(--tinta); /* @kind other */
+  --perforacion:2px dashed var(--linea-sobre-verde); /* @kind other */
+  --perforacion-papel:2px dashed var(--linea-sobre-papel); /* @kind other */
+  /* Sombras duras, sin desenfoque. Nunca difusas, nunca negras. */
+  /* Puertas */
+  --sombra-2:5px 5px 0 var(--verde);
+  --sombra-3:8px 8px 0 var(--verde);
+  /* Botones */
+  --sombra-boton:4px 4px 0 var(--tinta);
+  --sombra-boton-alta:6px 6px 0 var(--tinta);
+  --sombra-boton-hueco:4px 4px 0 var(--verde-hondo);
+  --sombra-boton-hueco-alta:6px 6px 0 var(--verde-hondo);
+  --sombra-boton-papel:4px 4px 0 var(--naranja);
+  --sombra-boton-papel-alta:6px 6px 0 var(--naranja);
+  /* Fichas de proyecto */
+  --sombra-proyecto:5px 5px 0 var(--verde-hondo);
+  --sombra-proyecto-alta:8px 8px 0 var(--verde-hondo);
+  --foco-contorno:3px solid var(--naranja); /* @kind other */
+}

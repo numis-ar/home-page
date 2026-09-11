@@ -1,0 +1,31 @@
+:root{
+  /* Marca */
+  --verde:#064D2D;
+  --naranja:#DC5A1E;
+  --tinta:#343434;
+  --desvaido:#7A7A7A;
+  /* Derivados */
+  --verde-hondo:#03321D;
+  --papel:#FBFBF8;
+  --blanco:#FFFFFF;
+  --menta:#CFE3D8;
+  --gris-texto:#55544F;
+  --linea-sobre-verde:rgba(207,227,216,.45);
+  --linea-sobre-papel:#CFCEC6;
+  --borde-ticket-suelto:#E4E3DC;
+  --amarillo-pendiente:#FFE7A3;
+
+  /* Alias semánticos: fondo verde (contexto por defecto) */
+  --fondo:var(--verde);
+  --fondo-hondo:var(--verde-hondo);
+  --fondo-claro:var(--papel);
+  --texto:var(--blanco);
+  --texto-secundario:var(--menta);
+  --texto-sobre-papel:var(--tinta);
+  --texto-secundario-papel:var(--gris-texto);
+  --acento:var(--naranja);
+  --foco:var(--naranja);
+  --superficie-ticket:var(--papel);
+  --superficie-ticket-suelto:var(--blanco);
+  --superficie-puerta:var(--blanco);
+}

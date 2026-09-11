@@ -1,0 +1,33 @@
+:root{
+  --t-cierre:clamp(2.4rem, 6vw, 5.2rem); /* @kind font */
+  --t-display:clamp(2.4rem, 5.2vw, 4.7rem); /* @kind font */
+  --t-verbo:clamp(2.1rem, 5vw, 4.4rem); /* @kind font */
+  --t-titulo:clamp(2.2rem, 4.4vw, 3.8rem); /* @kind font */
+  --t-seccion:clamp(1.9rem, 3.6vw, 3rem); /* @kind font */
+  --t-h3:1.35rem; /* @kind font */
+  --t-lead:1.15rem; /* @kind font */
+  --t-base:1.0625rem; /* @kind font */
+  --t-chico:.95rem; /* @kind font */
+  --t-ticket:.86rem; /* @kind font */
+
+  /* Ejes variables */
+  --wdth-ancho:100; /* @kind font */   /* titulares */
+  --wdth-medio:100; /* @kind font */   /* h3 de puertas, públicos, sello */
+  --wdth-normal:100; /* @kind font */  /* texto corriente */
+  --wdth-angosto:80; /* @kind font */  /* tickets */
+
+  --peso-negro:900; /* @kind font */
+  --peso-fuerte:700; /* @kind font */
+  --peso-medio:500; /* @kind font */
+  --peso-normal:400; /* @kind font */
+
+  --ls-titular:-.035em; /* @kind font */
+  --ls-cierre:-.04em; /* @kind font */
+  --ih-titular:.98; /* @kind font */
+  --ih-base:1.5; /* @kind font */
+
+  /* Medidas de línea */
+  --medida-lead:46ch; /* @kind other */
+  --medida-texto:52ch; /* @kind other */
+  --medida-angosta:36ch; /* @kind other */
+}

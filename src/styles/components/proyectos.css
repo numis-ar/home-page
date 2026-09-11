@@ -1,0 +1,62 @@
+/* Proyectos: carrusel de marcas y nombres. Solo eso: logo y título, sin ficha de detalle. */
+
+/* Banda: versión compacta que va pegada al hero. No compite con él —
+   fondo propio (verde hondo), encabezado de etiqueta en vez de titular, fichas chicas. */
+.seccion--banda{padding:var(--e-6) 0;background:var(--verde-hondo)}
+.proyectos--banda .proyecto{background:var(--blanco)}
+.proyectos--banda .proyectos__enc{margin-bottom:var(--e-4)}
+.proyectos--banda .proyectos__etiqueta{font-size:var(--t-chico);font-variation-settings:"wdth" var(--wdth-angosto);font-weight:var(--peso-fuerte);color:var(--menta);margin:0}
+.seccion--papel .proyectos--banda .proyectos__etiqueta{color:var(--gris-texto)}
+.proyectos--banda .proyecto{flex-basis:clamp(150px,18%,190px);padding:var(--e-4) var(--e-4) var(--e-3)}
+.proyectos--banda .proyecto__marca{height:44px;margin-bottom:var(--e-3)}
+.proyectos--banda .proyecto__marca img{max-height:44px}
+.proyectos--banda .proyecto h3{font-size:1rem}
+.proyectos--banda .proyecto__tipo{font-size:.82rem}
+.proyectos--banda .proyectos__mando{margin-top:var(--e-4)}
+.proyectos--banda .proyectos__paso{padding:.4rem .8rem;font-size:.85rem}
+@media (max-width:880px){.proyectos--banda .proyecto{flex-basis:52%}}
+.proyectos__enc{display:flex;align-items:baseline;justify-content:space-between;gap:var(--e-5);flex-wrap:wrap;margin-bottom:var(--e-5)}
+.proyectos__enc .titulo-seccion{margin-bottom:0}
+.proyectos__cuenta{font-variation-settings:"wdth" var(--wdth-angosto);font-variant-numeric:tabular-nums;font-size:var(--t-chico);color:var(--menta)}
+.seccion--papel .proyectos__cuenta{color:var(--gris-texto)}
+.proyectos__pista{display:flex;gap:var(--e-4);overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-ms-overflow-style:none}
+.proyectos__pista::-webkit-scrollbar{display:none}
+.proyecto{flex:0 0 clamp(170px,21%,230px);scroll-snap-align:start;background:var(--papel);color:var(--tinta);border:2.5px solid var(--tinta);border-top:3px solid var(--naranja);box-shadow:var(--sombra-proyecto);padding:var(--e-5) var(--e-4) var(--e-4);text-decoration:none;display:flex;flex-direction:column;transition:transform var(--rapido),box-shadow var(--rapido)}
+a.proyecto:hover{color:var(--tinta);transform:translate(-3px,-3px);box-shadow:var(--sombra-proyecto-alta)}
+.seccion--papel .proyecto{box-shadow:var(--sombra-2)}
+.seccion--papel a.proyecto:hover{box-shadow:var(--sombra-3)}
+.proyecto__marca{height:62px;display:flex;align-items:center;justify-content:flex-start;margin-bottom:var(--e-4)}
+.proyecto__marca img{max-height:62px;width:auto;max-width:100%}
+/* Sin logo todavía: hueco marcado, imposible de publicar así. */
+.proyecto__marca--vacia{border:1px dashed var(--naranja);background:var(--amarillo-pendiente);align-items:center;justify-content:center;font-size:.78rem;color:var(--tinta);font-variation-settings:"wdth" var(--wdth-angosto)}
+.proyecto h3{font-size:1.15rem;font-weight:800;font-variation-settings:"wdth" var(--wdth-medio);line-height:1.15;letter-spacing:-.02em;color:var(--verde);margin:0}
+.proyecto__tipo{display:block;font-size:var(--t-chico);color:var(--gris-texto);margin-top:auto;padding-top:var(--e-2)}
+.proyectos__mando{display:flex;align-items:center;gap:var(--e-2);margin-top:var(--e-5)}
+/* Si las fichas entran todas, no hay nada que desplazar: la botonera desaparece
+   y las fichas se reparten el ancho en vez de dejar medio bloque vacío. */
+.proyectos[data-desborde="no"] .proyectos__mando{display:none}
+.proyectos[data-desborde="no"] .proyecto{flex:1 1 0;max-width:320px}
+.proyectos__paso{font:inherit;font-size:var(--t-chico);font-weight:var(--peso-fuerte);padding:.55rem 1rem;border:2px solid var(--menta);border-radius:var(--radio-boton);background:transparent;color:var(--blanco);cursor:pointer;transition:border-color var(--rapido)}
+.proyectos__paso:hover:not(:disabled){border-color:var(--blanco)}
+.proyectos__paso:disabled{opacity:.35;cursor:default}
+.seccion--papel .proyectos__paso{border-color:var(--verde);color:var(--verde)}
+.proyectos__indice{display:flex;gap:5px;margin-left:auto}
+.proyectos__indice i{display:block;width:30px;height:3px;background:var(--linea-sobre-verde)}
+.proyectos__indice i[data-activo="si"]{background:var(--naranja)}
+.seccion--papel .proyectos__indice i{background:var(--linea-sobre-papel)}
+@media (max-width:880px){.proyecto{flex-basis:60%}}
+@media (prefers-reduced-motion:reduce){.proyectos__pista{scroll-behavior:auto}.proyectos__paso,.proyecto{transition:none}a.proyecto:hover{transform:none}}
+
+/* --- Local additions (not in the design system copy) ---------------------- */
+
+/* Ficha con descripción y enlace a su página. El tipo queda pegado al nombre;
+   "Ver el proyecto" toma el margen automático para que las fichas de distinto
+   largo terminen alineadas abajo. */
+.proyecto .proyecto__tipo{margin-top:0}
+.proyecto__descripcion{margin-top:var(--e-3);padding-top:var(--e-3);border-top:var(--perforacion-papel);font-size:var(--t-chico);line-height:1.4;color:var(--tinta)}
+.proyecto__ver{margin-top:auto;padding-top:var(--e-4);font-size:var(--t-chico);font-weight:var(--peso-fuerte);color:var(--verde);text-decoration:underline;text-underline-offset:3px}
+.proyectos--banda .proyecto__descripcion,.proyectos--banda .proyecto__ver{font-size:.82rem}
+
+/* Página de un proyecto: enlace de vuelta y tipo en el hero. */
+.proyecto-pagina__volver{display:inline-block;margin-bottom:var(--e-5);font-size:var(--t-chico)}
+.proyecto-pagina__tipo{margin-top:var(--e-4);font-size:var(--t-lead);font-weight:var(--peso-fuerte);color:var(--menta)}

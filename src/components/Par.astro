@@ -1,0 +1,11 @@
+---
+/** Par: ticket + text in two columns. `textoAngosto` flips the proportion. Mirrors Seccion.d.ts. */
+interface Props {
+  textoAngosto?: boolean;
+  class?: string;
+}
+
+const { textoAngosto = false, class: className } = Astro.props;
+---
+
+<div class:list={["par", textoAngosto && "par--texto-angosto", className]}><slot /></div>

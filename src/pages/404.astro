@@ -1,0 +1,28 @@
+---
+/**
+ * Not found page. Astro builds it as dist/404.html; the hosting must serve it
+ * for unknown URLs so visitors never see the host's generic (often English)
+ * page.
+ */
+import Base from "../layouts/Base.astro";
+import Acciones from "../components/Acciones.astro";
+import Boton from "../components/Boton.astro";
+import Contenedor from "../components/Contenedor.astro";
+import Hero from "../components/Hero.astro";
+
+const lead = "Puede que la dirección haya cambiado.";
+---
+
+<Base title="Página no encontrada · Numis" description={`Esta página no existe. ${lead}`}>
+  <Contenedor>
+    <Hero>
+      <div>
+        <h1 class="display">Esta página no existe.</h1>
+        <p class="lead">{lead}</p>
+        <Acciones>
+          <Boton href="/">Volver al inicio</Boton>
+        </Acciones>
+      </div>
+    </Hero>
+  </Contenedor>
+</Base>

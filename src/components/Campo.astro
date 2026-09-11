@@ -1,0 +1,29 @@
+---
+/**
+ * Campo: label + control + help. `htmlFor` must match the control's id.
+ * Mark optional fields, not required ones. Mirrors components/formulario/Campo.d.ts.
+ */
+interface Props {
+  etiqueta?: string;
+  /** One line under the control. Never repeat the label here. */
+  ayuda?: string;
+  opcional?: boolean;
+  htmlFor?: string;
+  class?: string;
+}
+
+const { etiqueta, ayuda, opcional = false, htmlFor, class: className } = Astro.props;
+---
+
+<div class:list={["campo", className]}>
+  {
+    etiqueta && (
+      <label class="campo__etiqueta" for={htmlFor}>
+        {etiqueta}
+        {opcional && <span class="campo__opcional"> · opcional</span>}
+      </label>
+    )
+  }
+  <slot />
+  {ayuda && <span class="campo__ayuda">{ayuda}</span>}
+</div>

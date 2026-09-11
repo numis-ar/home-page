@@ -1,0 +1,14 @@
+---
+/** Logo: fixed height (34px in the header). Never recolor or stretch. Mirrors Cabecera.d.ts. */
+interface Props {
+  /** On green: numis-logo-sobre-verde.svg. */
+  src?: string;
+  href?: string;
+  alt?: string;
+  class?: string;
+}
+
+const { src = "/logo/numis-logo-sobre-verde.svg", href = "/", alt = "Numis, inicio", class: className } = Astro.props;
+---
+
+<a class:list={["logo", className]} href={href}><img src={src} alt={alt} width="156" height="34" /></a>

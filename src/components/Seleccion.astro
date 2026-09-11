@@ -1,0 +1,35 @@
+---
+/**
+ * Seleccion: native <select>, with its native arrow on purpose (the system has
+ * no iconography). Mirrors `Seleccion` in Campo.d.ts.
+ */
+import type { HTMLAttributes } from "astro/types";
+
+/**
+ * `seleccionada` marks the initial option. A disabled placeholder with an
+ * empty value (e.g. "Elegí un motivo") needs it, because browsers otherwise
+ * preselect the first enabled option; add `required` to the select so the
+ * placeholder cannot be submitted.
+ */
+type Opcion = string | { valor: string; texto: string; deshabilitada?: boolean; seleccionada?: boolean };
+
+interface Props extends HTMLAttributes<"select"> {
+  opciones?: Opcion[];
+}
+
+const { opciones = [], class: className, ...rest } = Astro.props;
+---
+
+<select class:list={["campo__control", className]} {...rest}>
+  {
+    opciones.map((o) =>
+      typeof o === "string" ? (
+        <option value={o}>{o}</option>
+      ) : (
+        <option value={o.valor} disabled={o.deshabilitada} selected={o.seleccionada}>
+          {o.texto}
+        </option>
+      ),
+    )
+  }
+</select>

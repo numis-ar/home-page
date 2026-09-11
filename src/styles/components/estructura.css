@@ -1,0 +1,83 @@
+/* Obras */
+.obra{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:var(--e-6);align-items:baseline;padding:1.6rem 0;border-top:var(--perforacion)}
+.obra:last-child{border-bottom:var(--perforacion)}
+.obra h3{font-weight:var(--peso-negro);font-variation-settings:"wdth" var(--wdth-ancho);font-size:var(--t-verbo);line-height:.95;letter-spacing:-.03em}
+.obra p{color:var(--menta);max-width:var(--medida-lead)}
+.obra p strong{color:var(--blanco);font-weight:600;display:block;margin-bottom:.3rem}
+
+/* Pasos */
+.pasos{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);counter-reset:paso}
+.pasos li{counter-increment:paso;padding:var(--e-5) 1.75rem 1.75rem 0}
+.pasos li + li{padding-left:1.75rem;border-left:var(--perforacion)}
+.pasos li::before{content:counter(paso);display:block;font-variation-settings:"wdth" var(--wdth-ancho);font-weight:var(--peso-negro);font-size:3.2rem;line-height:1;color:var(--naranja);margin-bottom:var(--e-4)}
+.pasos h3{font-size:var(--t-h3);font-weight:var(--peso-fuerte);margin-bottom:var(--e-2)}
+.pasos p{color:var(--menta);max-width:32ch}
+.seccion--papel .pasos p{color:var(--gris-texto)}
+.seccion--papel .pasos li + li{border-left-color:var(--linea-sobre-papel)}
+
+/* Puertas */
+.puertas{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:var(--e-7)}
+.puerta{display:block;text-decoration:none;border:var(--borde-fuerte);padding:var(--e-5);background:var(--blanco);color:var(--tinta);box-shadow:var(--sombra-2);transition:transform var(--rapido),box-shadow var(--rapido)}
+.puerta:hover{transform:translate(-3px,-3px);box-shadow:var(--sombra-3);color:var(--tinta)}
+.puerta strong{display:block;font-size:1.3rem;font-weight:800;font-variation-settings:"wdth" var(--wdth-medio);line-height:1.1;margin-bottom:.6rem;color:var(--verde)}
+.puerta span{color:var(--gris-texto)}
+
+/* Públicos */
+.publicos{display:grid;grid-template-columns:repeat(3,1fr);gap:0 1.75rem}
+.publico{padding:var(--e-5) 0;border-top:3px solid var(--naranja)}
+.publico h3{font-size:var(--t-h3);font-weight:800;font-variation-settings:"wdth" var(--wdth-medio);line-height:1.15;margin:var(--e-4) 0 var(--e-3)}
+.publico p{color:var(--menta);max-width:34ch}
+.seccion--papel .publico p{color:var(--gris-texto)}
+
+@media (max-width:880px){
+  .obra{grid-template-columns:1fr;gap:.6rem}
+  .pasos,.puertas,.publicos{grid-template-columns:1fr}
+  .pasos li,.pasos li + li{padding:var(--e-5) 0;border-left:0;border-top:var(--perforacion)}
+  .seccion--papel .pasos li,.seccion--papel .pasos li + li{border-top-color:var(--linea-sobre-papel)}
+}
+@media (prefers-reduced-motion:reduce){.puerta{transition:none}}
+
+/* --- Local additions (not in the design system copy) ---------------------- */
+
+/* Públicos a dos columnas (misión y visión en /nosotros). */
+.publicos--dos{grid-template-columns:repeat(2,minmax(0,1fr))}
+.publicos--dos .publico p{max-width:var(--medida-texto)}
+@media (max-width:880px){.publicos--dos{grid-template-columns:1fr}}
+
+/* Integrante del equipo en /nosotros: una caja con borde duro y sombra sin
+   desenfoque, como las puertas. Las cajas alternan blanco y menta (en tres
+   columnas queda un damero). Se levanta en hover como el resto del sistema. */
+.integrante{padding:var(--e-5);border:var(--borde-fuerte);background:var(--blanco);color:var(--tinta);box-shadow:5px 5px 0 var(--tinta);transition:transform var(--rapido),box-shadow var(--rapido)}
+.integrante:nth-child(even){background:var(--menta)}
+.integrante:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--tinta)}
+.integrante h3{font-size:var(--t-h3);font-weight:800;font-variation-settings:"wdth" var(--wdth-medio);line-height:1.15;margin:0 0 var(--e-2);color:var(--verde)}
+.integrante p{color:var(--gris-texto);max-width:34ch}
+.integrante:nth-child(even) p{color:var(--verde-hondo)}
+.integrante .integrante__area{color:var(--tinta);font-weight:var(--peso-fuerte)}
+.integrante:nth-child(even) .integrante__area{color:var(--verde-hondo)}
+.integrante p + p{margin-top:var(--e-2)}
+.integrante__foto{width:8rem;height:auto;margin-bottom:var(--e-4)}
+.integrante__enlaces{list-style:none;display:flex;flex-wrap:wrap;gap:var(--e-2) var(--e-4);margin-top:var(--e-3);font-size:var(--t-chico)}
+.integrante .enlace{color:var(--verde)}
+.equipo-grilla{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--e-6) 1.25rem;margin-top:var(--e-7)}
+@media (max-width:880px){.equipo-grilla{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.integrante{transition:none}}
+
+/* Lista de notas en /blog: solo tipografía. Fecha, título enlazado, bajada y
+   firma; entre nota y nota, la perforación (sobre papel, su versión clara). */
+.notas{list-style:none}
+.nota{padding:var(--e-6) 0;border-top:var(--perforacion-papel)}
+.nota:first-child{padding-top:0;border-top:0}
+.nota:last-child{padding-bottom:0}
+.nota__fecha{font-size:var(--t-chico);color:var(--gris-texto)}
+.nota__titulo{margin-top:var(--e-2);max-width:var(--medida-lead);font-size:var(--t-h3);font-weight:800;font-variation-settings:"wdth" var(--wdth-medio);line-height:1.15;letter-spacing:-.02em}
+.nota__titulo a{color:var(--verde);text-decoration:none}
+.nota__titulo a:hover{text-decoration:underline;text-underline-offset:3px}
+.nota__bajada{margin-top:var(--e-3);max-width:var(--medida-texto)}
+.nota__autores{margin-top:var(--e-3);font-size:var(--t-chico);color:var(--gris-texto)}
+
+/* Firma de una nota ("Por Ana y Beto"): cada nombre es un enlace suelto, no
+   parte de una oración, así que necesita 24px de alto para tocarlo (WCAG 2.2,
+   2.5.8). Mismo recurso que los enlaces del pie: padding que el margen
+   negativo compensa, sin cambiar el renglón. */
+.autores .enlace{display:inline-block;padding-block:var(--e-1);margin-block:calc(var(--e-1) * -1)}

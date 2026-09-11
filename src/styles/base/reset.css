@@ -1,0 +1,10 @@
+*,*::before,*::after{box-sizing:border-box}
+*{margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--verde);color:var(--blanco);font-family:var(--fuente);font-size:var(--t-base);line-height:var(--ih-base);-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+a:hover{color:var(--blanco)}
+.seccion--papel a:hover{color:var(--verde)}
+:focus-visible{outline:var(--foco-contorno);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

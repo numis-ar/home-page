@@ -1,0 +1,9 @@
+.boton{display:inline-block;font:inherit;font-weight:var(--peso-fuerte);text-decoration:none;padding:.8rem 1.3rem;border:2.5px solid var(--tinta);border-radius:var(--radio-boton);background:var(--papel);color:var(--verde);cursor:pointer;box-shadow:var(--sombra-boton);transition:transform var(--rapido),box-shadow var(--rapido)}
+.boton:hover{transform:translate(-2px,-2px);box-shadow:var(--sombra-boton-alta);background:var(--papel);color:var(--verde)}
+.boton:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--tinta)}
+.boton--hueco{background:transparent;color:var(--blanco);border-color:var(--papel);box-shadow:var(--sombra-boton-hueco)}
+.boton--hueco:hover{background:transparent;color:var(--blanco);box-shadow:var(--sombra-boton-hueco-alta)}
+.seccion--papel .boton{background:var(--verde);border-color:var(--verde);color:var(--blanco);box-shadow:var(--sombra-boton-papel)}
+.seccion--papel .boton:hover{color:var(--blanco);box-shadow:var(--sombra-boton-papel-alta)}
+.acciones{display:flex;flex-wrap:wrap;gap:var(--e-4);margin-top:2.25rem}
+@media (prefers-reduced-motion:reduce){.boton{transition:none}.boton:hover{transform:none}}

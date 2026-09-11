@@ -1,0 +1,10 @@
+---
+/** Contenedor: 1180px max width and fluid side margins. Mirrors Seccion.d.ts. */
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"div">;
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class:list={["contenedor", className]} {...rest}><slot /></div>

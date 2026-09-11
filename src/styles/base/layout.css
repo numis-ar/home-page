@@ -1,0 +1,53 @@
+.contenedor{max-width:var(--ancho-max);margin:0 auto;padding:0 var(--e-lateral)}
+.seccion{padding:var(--e-seccion) 0}
+.seccion--papel{background:var(--papel);color:var(--tinta)}
+.seccion--hondo{background:var(--verde-hondo)}
+.seccion--papel,.seccion--hondo{overflow:hidden}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(2rem,5vw,5rem);align-items:start;padding:clamp(2rem,6vw,5rem) 0 var(--e-seccion)}
+.hero .impresora{justify-self:end}
+.hero .lead{margin-top:1.75rem}
+.par{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(2.5rem,6vw,6rem);align-items:center}
+.par--texto-angosto{grid-template-columns:.8fr 1.2fr;align-items:start}
+.par .titulo + .texto{margin-top:1.25rem}
+.bloque-ficha{margin-top:var(--e-8)}
+@media (max-width:880px){
+  .hero,.par,.par--texto-angosto{grid-template-columns:1fr}
+  .hero .impresora{justify-self:start}
+}
+
+/* --- Local additions (not in the design system copy) ---------------------- */
+
+/* Hero a pantalla completa: cabecera + hero llenan el alto de la ventana, así
+   la sección siguiente no asoma abajo. 5.8rem es apenas menos que el alto de la cabecera (94px), para que no asome ni un borde. Solo en
+   escritorio; en una columna el hero ya es más alto que la pantalla. */
+@media (min-width:881px){
+  .hero--pantalla{min-height:calc(100svh - 5.8rem);align-items:center;padding-bottom:clamp(2rem,6vw,5rem)}
+}
+
+/* Héroes interiores con columna derecha (el ticket suelto de /nosotros,
+   /contacto y /proyectos/<slug>): de la misma familia que el de la portada.
+   La segunda columna va al ras del borde derecho del contenido, como la
+   impresora (alineada con el botón de la cabecera), con su ancho máximo en vez
+   de encogerse al texto (el ticket sigue midiendo 320px), y el hero tiene un alto
+   mínimo común con el contenido centrado, así no depende del largo del texto.
+   El piso cubre pantallas bajas sin empujar el contenido y el techo evita una
+   banda verde vacía en pantallas altas. Los héroes de una sola columna (blog,
+   privacidad, 404, nota) quedan con el padding del sistema: les sigue el
+   texto de la página y un alto mínimo solo agregaría verde vacío. Solo en
+   escritorio: en una columna el ticket sigue alineado al inicio. */
+@media (min-width:881px){
+  .hero > :nth-child(2){justify-self:end;width:100%}
+  .hero:has(> :nth-child(2)):not(.hero--pantalla){min-height:clamp(28rem,62svh,40rem);align-items:center;padding-bottom:clamp(2rem,6vw,5rem)}
+}
+
+/* Páginas de texto (/privacidad): títulos de sección más juntos al texto que
+   los siguen, y separados del bloque anterior. */
+.privacidad .titulo-seccion{margin:var(--e-8) 0 var(--e-4)}
+.privacidad .titulo-seccion + .texto{margin-top:0}
+
+/* Bajada del equipo en /nosotros, entre el título y la grilla. */
+.nosotros__bajada{margin-bottom:var(--e-6)}
+
+/* Texto solo para lectores de pantalla (por ejemplo, "3 proyectos" junto al
+   "03" de la banda de proyectos). */
+.solo-lectores{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

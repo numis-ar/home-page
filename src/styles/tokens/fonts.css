@@ -1,0 +1,3 @@
+/* Archivo variable: un solo archivo, peso 100–900, ancho 62–125. SIL OFL. */
+@font-face{font-family:"Archivo";src:url("/fonts/archivo-variable.woff2") format("woff2");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
+:root{--fuente:"Archivo", Arial, sans-serif; /* @kind font */--fuente-lema:Arial, Helvetica, sans-serif; /* @kind font */}

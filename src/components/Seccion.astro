@@ -1,0 +1,33 @@
+---
+/**
+ * Seccion: page section. Its background defines the color context of everything
+ * inside (buttons, tickets, titles). Target per page: green ~60%, paper ~30%, orange under 5%.
+ * Mirrors components/layout/Seccion.d.ts.
+ */
+import type { HTMLAttributes } from "astro/types";
+import Contenedor from "./Contenedor.astro";
+
+interface Props extends HTMLAttributes<"section"> {
+  /** "verde" (brand), "papel" (light) or "hondo" (contrast). */
+  fondo?: "verde" | "papel" | "hondo";
+  /** Wrap children in <Contenedor>. Defaults to true. */
+  contenedor?: boolean;
+}
+
+const { fondo = "verde", contenedor = true, class: className, ...rest } = Astro.props;
+---
+
+<section
+  class:list={["seccion", fondo === "papel" && "seccion--papel", fondo === "hondo" && "seccion--hondo", className]}
+  {...rest}
+>
+  {
+    contenedor ? (
+      <Contenedor>
+        <slot />
+      </Contenedor>
+    ) : (
+      <slot />
+    )
+  }
+</section>

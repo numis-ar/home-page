@@ -1,0 +1,70 @@
+.display,.titulo,.titulo-seccion,.cierre{font-weight:var(--peso-negro);font-variation-settings:"wdth" var(--wdth-ancho);letter-spacing:var(--ls-titular)}
+.display{font-size:var(--t-display);line-height:.98;max-width:13ch}
+.titulo{font-size:var(--t-titulo);line-height:.98;max-width:12ch}
+.titulo-seccion{font-size:var(--t-seccion);line-height:1;max-width:16ch;margin-bottom:var(--e-6)}
+.cierre{font-size:var(--t-cierre);line-height:.95;letter-spacing:var(--ls-cierre);max-width:14ch}
+.seccion--papel .titulo,.seccion--papel .cierre{color:var(--verde)}
+.lead{font-size:var(--t-lead);max-width:var(--medida-lead);color:var(--menta)}
+.seccion--papel .lead{color:var(--tinta)}
+.texto{max-width:var(--medida-texto)}
+.texto + .texto{margin-top:var(--e-4)}
+.secundario{color:var(--menta)}
+.seccion--papel .secundario{color:var(--gris-texto)}
+.texto-angosto{max-width:var(--medida-angosta)}
+.cierre + .lead{margin-top:var(--e-5)}
+.nota{margin-top:2.5rem}
+.enlace{font-weight:var(--peso-fuerte);color:var(--blanco)}
+.seccion--papel .enlace{color:var(--verde)}
+.lema{display:block;margin-top:var(--e-2);font-family:var(--fuente-lema);font-weight:700}
+
+/* --- Local additions (not in the design system copy) ---------------------- */
+
+/* Párrafos corridos justificados, sin silabeo: ninguna palabra se corta con
+   guion ("Tra-bajo"). Solo cortes manuales (&shy;). `text-wrap:pretty` reparte
+   las palabras para que la última línea no quede con una sola. Títulos,
+   tickets y textos de tarjetas quedan alineados a la izquierda. */
+p.lead,p.texto,p.secundario{text-align:justify;hyphens:manual;-webkit-hyphens:manual;text-wrap:pretty}
+
+/* Los enlaces dentro de párrafos (correos, sobre todo) no se silabean. Si un
+   correo o una dirección no entra en la línea, se parte donde haga falta en
+   vez de empujar la página: nunca con guion. */
+p .enlace{hyphens:manual;-webkit-hyphens:manual;overflow-wrap:anywhere}
+
+/* A 360px entran unas 35 letras por línea: justificado sin silabeo abre huecos
+   enormes. En pantallas angostas, alineado a la izquierda. */
+@media (max-width:480px){p.lead,p.texto,p.secundario{text-align:left}}
+
+/* Titulares: que la última línea no quede con una palabra corta sola ("Cómo
+   funciona un / pago"). `pretty` solo toca el final: el resto del corte queda
+   como estaba. El titular del hero (.display, dos o tres líneas) va parejo:
+   `pretty` no alcanzaba a evitar "que se pueden / ver." entre 1100 y 1300px. */
+.titulo,.titulo-seccion,.cierre,.prosa h2,.prosa h3{text-wrap:pretty}
+.display{text-wrap:balance}
+
+/* Cabecera de una nota (/blog/<slug>): fecha arriba, firma debajo de la bajada. */
+.nota-cabeza__fecha{margin-bottom:var(--e-4);font-size:var(--t-chico)}
+.nota-cabeza__autores{margin-top:var(--e-5);color:var(--menta);font-size:var(--t-chico)}
+
+/* Prosa: el cuerpo en Markdown de una nota, sobre papel. Títulos con los pesos
+   del sistema a ancho 100, texto a 52 caracteres, filete naranja de 3px en las
+   citas, perforación como separador. Sin radios ni sombras. */
+.prosa{max-width:var(--medida-texto);overflow-wrap:break-word}
+.prosa > * + *{margin-top:var(--e-4)}
+.prosa h2{margin-top:var(--e-8);font-size:var(--t-seccion);font-weight:var(--peso-negro);font-variation-settings:"wdth" var(--wdth-ancho);letter-spacing:var(--ls-titular);line-height:1}
+.prosa h3{margin-top:var(--e-6);font-size:var(--t-h3);font-weight:800;font-variation-settings:"wdth" var(--wdth-medio);line-height:1.15}
+.prosa h2 + *,.prosa h3 + *{margin-top:var(--e-3)}
+.prosa > :first-child{margin-top:0}
+.prosa p{text-align:justify}
+.prosa p,.prosa li{hyphens:manual;-webkit-hyphens:manual;text-wrap:pretty}
+.prosa ul,.prosa ol{padding-left:1.25em}
+.prosa li + li{margin-top:var(--e-2)}
+.prosa blockquote{padding-left:var(--e-5);border-left:3px solid var(--naranja)}
+.prosa blockquote > * + *{margin-top:var(--e-3)}
+.prosa code{font-family:monospace;font-size:.9em;color:var(--tinta);background:var(--blanco);border:1px solid var(--linea-sobre-papel);padding:0 .25em}
+.prosa pre{padding:var(--e-4);background:var(--blanco);border:1px solid var(--linea-sobre-papel);overflow-x:auto;line-height:1.45}
+.prosa pre code{border:0;padding:0;background:none}
+.prosa a{font-weight:var(--peso-fuerte);color:var(--verde)}
+.prosa hr{height:0;border:0;border-top:var(--perforacion-papel);margin:var(--e-7) 0}
+.prosa img{max-width:100%;height:auto}
+.prosa strong{font-weight:var(--peso-fuerte)}
+@media (max-width:480px){.prosa p{text-align:left}}

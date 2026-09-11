@@ -1,0 +1,20 @@
+---
+/**
+ * Cabecera: logo on the left, links + one button on the right. Sits inside a
+ * .contenedor on green. Below 880px the links hide and only the primary button stays.
+ * Mirrors components/navegacion/Cabecera.d.ts.
+ */
+import Logo from "./Logo.astro";
+
+interface Props {
+  logoSrc?: string;
+  class?: string;
+}
+
+const { logoSrc, class: className } = Astro.props;
+---
+
+<header class:list={["cabecera", className]}>
+  <Logo src={logoSrc} />
+  <nav class="nav" aria-label="Principal"><slot /></nav>
+</header>

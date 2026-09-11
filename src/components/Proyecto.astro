@@ -1,0 +1,37 @@
+---
+/**
+ * Proyecto: one project card. Mark, name, type, a perforation, a one-line
+ * description and, when the project has its own page, "Ver el proyecto" at the
+ * bottom (the whole card is then the link).
+ * Without `logo` it draws the yellow "falta el logo" hole (same code as .pendiente)
+ * and without `descripcion` a <Pendiente>: neither must be published as is.
+ * Mirrors components/proyectos/Proyectos.d.ts, plus `descripcion` and the link line.
+ */
+import Pendiente from "./Pendiente.astro";
+
+export interface Props {
+  nombre: string;
+  /** One or two words: "Investigación", "Implementación", "Territorio". */
+  tipo?: string;
+  /** Path to the counterpart's logo. */
+  logo?: string;
+  /** One line about the project. */
+  descripcion?: string;
+  /** If the project has its own page, the card becomes a link. */
+  href?: string;
+  class?: string;
+}
+
+const { nombre, tipo, logo, descripcion, href, class: className } = Astro.props;
+const Etiqueta = href ? "a" : "article";
+---
+
+<Etiqueta class:list={["proyecto", className]} href={href}>
+  <div class:list={["proyecto__marca", !logo && "proyecto__marca--vacia"]}>
+    {logo ? <img src={logo} alt="" /> : "falta el logo"}
+  </div>
+  <h3>{nombre}</h3>
+  {tipo && <span class="proyecto__tipo">{tipo}</span>}
+  <p class="proyecto__descripcion">{descripcion ?? <Pendiente>falta la descripción</Pendiente>}</p>
+  {href && <span class="proyecto__ver">Ver el proyecto</span>}
+</Etiqueta>

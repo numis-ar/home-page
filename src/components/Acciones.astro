@@ -1,0 +1,10 @@
+---
+/** Acciones: row of buttons with the standard gap. Mirrors `Acciones` in Boton.d.ts. */
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"div">;
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class:list={["acciones", className]} {...rest}><slot /></div>

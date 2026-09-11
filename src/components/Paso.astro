@@ -1,0 +1,11 @@
+---
+/** Paso: one step of <Pasos>. Title says what the person does, in present tense. Mirrors Pasos.d.ts. */
+interface Props {
+  titulo: string;
+  class?: string;
+}
+
+const { titulo, class: className } = Astro.props;
+---
+
+<li class={className}><h3>{titulo}</h3><p><slot /></p></li>

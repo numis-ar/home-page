@@ -1,0 +1,14 @@
+---
+/**
+ * Pasos: numbered sequence in three columns, the number in orange drawn by a
+ * CSS counter (never written by hand). Only for real sequences; when order
+ * does not matter, use <Obra>. Mirrors components/estructura/Pasos.d.ts.
+ */
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"ol">;
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ol class:list={["pasos", className]} {...rest}><slot /></ol>

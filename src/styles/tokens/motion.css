@@ -1,0 +1,6 @@
+:root{
+  --rapido:.12s; /* @kind other */
+  --impresion-duracion:2.6s; /* @kind other */
+  --impresion-pasos:28; /* @kind other */
+  --impresion-retraso:.4s; /* @kind other */
+}

@@ -1,0 +1,20 @@
+---
+/**
+ * Obra: one "qué hacemos" row. Use it when order does NOT matter.
+ * Separated by a dashed perforation. Mirrors components/estructura/Obra.d.ts.
+ */
+interface Props {
+  /** Infinitive verb with a period: "Investigar.". */
+  verbo: string;
+  /** Formal name of the practice: "Investigación aplicada". */
+  nombre?: string;
+  class?: string;
+}
+
+const { verbo, nombre, class: className } = Astro.props;
+---
+
+<article class:list={["obra", className]}>
+  <h3>{verbo}</h3>
+  <p>{nombre && <strong>{nombre}</strong>}{nombre && " "}<slot /></p>
+</article>

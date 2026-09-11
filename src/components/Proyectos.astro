@@ -1,0 +1,98 @@
+---
+/**
+ * Proyectos: carousel of ongoing projects, right below the hero.
+ * Moves only on interaction (Anterior/Siguiente or touch scroll). When every card
+ * fits, the controls hide themselves (data-desborde="no").
+ * Mirrors components/proyectos/Proyectos.d.ts. Astro cannot count slotted
+ * children, so the cards are passed as data through `proyectos`.
+ */
+import Proyecto, { type Props as ProyectoProps } from "./Proyecto.astro";
+
+interface Props {
+  /** Section heading. Defaults to "Proyectos en curso". */
+  titulo?: string;
+  /** Compact version to sit under the hero. Needs `seccion--banda` on the parent <Seccion>. */
+  banda?: boolean;
+  /** Three to eight projects. */
+  proyectos: ProyectoProps[];
+  class?: string;
+}
+
+const { titulo = "Proyectos en curso", banda = false, proyectos, class: className } = Astro.props;
+const total = proyectos.length;
+const cuenta = String(total).padStart(2, "0");
+const cuentaCompleta = `${total} ${total === 1 ? "proyecto" : "proyectos"}`;
+---
+
+<div class:list={["proyectos", banda && "proyectos--banda", className]} data-desborde="no" data-proyectos>
+  <div class="proyectos__enc">
+    {banda ? <h2 class="proyectos__etiqueta">{titulo}</h2> : <h2 class="titulo-seccion">{titulo}</h2>}
+    {
+      banda ? (
+        <span class="proyectos__cuenta">
+          <span aria-hidden="true">{cuenta}</span>
+          <span class="solo-lectores">{cuentaCompleta}</span>
+        </span>
+      ) : (
+        <span class="proyectos__cuenta">{cuenta} proyectos</span>
+      )
+    }
+  </div>
+  <div class="proyectos__pista" tabindex="0" role="group" aria-label={titulo}>
+    {proyectos.map((p) => <Proyecto {...p} />)}
+  </div>
+  <div class="proyectos__mando">
+    <button type="button" class="proyectos__paso" aria-label="Proyecto anterior" data-anterior>Anterior</button>
+    <button type="button" class="proyectos__paso" aria-label="Proyecto siguiente" data-siguiente>Siguiente</button>
+    <div class="proyectos__indice" aria-hidden="true">
+      {proyectos.map((_, n) => <i data-activo={n === 0 ? "si" : "no"} />)}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Carousel controls, ported from the template's script. Without JS the track
+  // is still keyboard- and touch-scrollable and the controls stay hidden.
+  for (const raiz of document.querySelectorAll<HTMLElement>("[data-proyectos]")) {
+    const pista = raiz.querySelector<HTMLElement>(".proyectos__pista");
+    if (!pista) continue;
+    const paneles = () => Array.from(pista.children) as HTMLElement[];
+    const marcas = Array.from(raiz.querySelectorAll<HTMLElement>(".proyectos__indice i"));
+    const anterior = raiz.querySelector<HTMLButtonElement>("[data-anterior]");
+    const siguiente = raiz.querySelector<HTMLButtonElement>("[data-siguiente]");
+
+    const actual = () => {
+      let cerca = 0;
+      let dist = Infinity;
+      paneles().forEach((el, n) => {
+        const d = Math.abs(el.offsetLeft - pista.offsetLeft - pista.scrollLeft);
+        if (d < dist) {
+          dist = d;
+          cerca = n;
+        }
+      });
+      return cerca;
+    };
+
+    const irA = (n: number) => {
+      const el = paneles()[Math.max(0, Math.min(n, paneles().length - 1))];
+      if (el) pista.scrollTo({ left: el.offsetLeft - pista.offsetLeft });
+    };
+
+    const pintar = () => {
+      const desborda = pista.scrollWidth > pista.clientWidth + 1;
+      raiz.setAttribute("data-desborde", desborda ? "si" : "no");
+      const i = actual();
+      marcas.forEach((m, n) => m.setAttribute("data-activo", n === i ? "si" : "no"));
+      if (anterior) anterior.disabled = !desborda || i === 0;
+      if (siguiente) siguiente.disabled = !desborda || i >= paneles().length - 1;
+    };
+
+    anterior?.addEventListener("click", () => irA(actual() - 1));
+    siguiente?.addEventListener("click", () => irA(actual() + 1));
+    pista.addEventListener("scroll", pintar, { passive: true });
+    window.addEventListener("resize", pintar);
+    if (typeof ResizeObserver !== "undefined") new ResizeObserver(pintar).observe(pista);
+    pintar();
+  }
+</script>

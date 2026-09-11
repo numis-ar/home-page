@@ -1,0 +1,14 @@
+---
+/**
+ * Pendiente: marks missing data (yellow background, dashed orange outline) so it
+ * can never be published by mistake. The slot says what is missing; it defaults
+ * to "a completar". Mirrors `Pendiente` in components/ticket/Ticket.d.ts.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<span class:list={["pendiente", className]}><slot>a completar</slot></span>
