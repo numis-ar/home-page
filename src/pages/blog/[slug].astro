@@ -1,0 +1,66 @@
+---
+/**
+ * Note page, one per published entry of the `blog` collection
+ * (src/content/blog/<slug>.md with `publicado: true`); unpublished entries get
+ * no page. Header on green with date, title, lead and byline; the Markdown
+ * body on paper with the long-form `.prosa` styles (src/styles/base/type.css);
+ * a button back to the listing. No printer here: the only automatic animation
+ * of the site belongs to the home hero.
+ */
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Acciones from "../../components/Acciones.astro";
+import Autores from "../../components/Autores.astro";
+import Boton from "../../components/Boton.astro";
+import Contenedor from "../../components/Contenedor.astro";
+import Hero from "../../components/Hero.astro";
+import Seccion from "../../components/Seccion.astro";
+import { autoresDe, fechaISO, fechaLarga, notasVisibles, type NotaEntrada } from "../../data/blog";
+import { enlaceBlog } from "../../data/sitio";
+
+export async function getStaticPaths() {
+  return (await notasVisibles()).map((nota) => ({ params: { slug: nota.id }, props: { nota } }));
+}
+
+interface Props {
+  nota: NotaEntrada;
+}
+
+const { nota } = Astro.props;
+const { titulo, fecha, bajada, actualizado } = nota.data;
+const autores = await autoresDe(nota);
+const { Content } = await render(nota);
+---
+
+<Base title={`${titulo} · Blog · Numis`} description={bajada}>
+  <Contenedor>
+    <Hero>
+      <div>
+        <p class="secundario nota-cabeza__fecha">
+          <time datetime={fechaISO(fecha)}>{fechaLarga(fecha)}</time>
+          {!nota.data.publicado && " · Borrador"}
+          {
+            actualizado && (
+              <>
+                {" "}
+                · Actualizada el <time datetime={fechaISO(actualizado)}>{fechaLarga(actualizado)}</time>
+              </>
+            )
+          }
+        </p>
+        <h1 class="display nota-cabeza__titulo">{titulo}</h1>
+        <p class="lead">{bajada}</p>
+        <Autores autores={autores} class="nota-cabeza__autores" />
+      </div>
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="papel" aria-label={`Texto de la nota ${titulo}`}>
+    <article class="prosa">
+      <Content />
+    </article>
+    <Acciones>
+      <Boton href={enlaceBlog.href}>Ver todas las notas</Boton>
+    </Acciones>
+  </Seccion>
+</Base>

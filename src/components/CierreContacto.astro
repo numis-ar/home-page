@@ -1,0 +1,25 @@
+---
+/**
+ * CierreContacto: closing section of the home and the project pages, with the
+ * contact doors (an email per reason, or the form while it is on). Structure from
+ * templates/pagina-institucional/PaginaInstitucional.dc.html.
+ * On paper by default; "hondo" keeps it from merging with a paper section
+ * right above it (the project pages).
+ */
+import PuertasContacto from "./PuertasContacto.astro";
+import Seccion from "./Seccion.astro";
+
+interface Props {
+  fondo?: "papel" | "hondo";
+}
+
+const { fondo = "papel" } = Astro.props;
+---
+
+<Seccion fondo={fondo} id="contacto">
+  <h2 class="cierre">Elegí por dónde entrar.</h2>
+  <p class="lead">
+    Implementar pagos, capacitar a tu equipo o sumarte a la cooperativa: contanos tu caso y te respondemos.
+  </p>
+  <PuertasContacto />
+</Seccion>

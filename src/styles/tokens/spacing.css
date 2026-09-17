@@ -1,0 +1,7 @@
+:root{
+  --e-1:.25rem; --e-2:.5rem; --e-3:.75rem; --e-4:1rem;
+  --e-5:1.5rem; --e-6:2rem;  --e-7:3rem;   --e-8:4rem;
+  --e-seccion:clamp(4rem, 8vw, 7rem); /* @kind spacing */
+  --e-lateral:clamp(1.25rem, 4vw, 3rem); /* @kind spacing */
+  --ancho-max:1180px; /* @kind spacing */
+}

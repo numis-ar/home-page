@@ -1,0 +1,94 @@
+---
+/**
+ * DRAFT pending legal review by Numis. Do not treat this text as final.
+ *
+ * Privacy page. Every statement describes what the site actually does; keep it
+ * in sync with the code:
+ * - The contact form is off (FORMULARIO_ACTIVO is false in src/data/sitio.ts):
+ *   the only contact route is writing to hola@numis.ar, and the "Cuando nos
+ *   escribís" section says so. When the form comes back (FORMULARIO_ACTIVO
+ *   true, src/components/FormularioContacto.astro), rewrite that section to
+ *   describe it: what it collects and where it goes (mail client via mailto:
+ *   while ENDPOINT_FORMULARIO is undefined, or the backend once it exists).
+ * - Base.astro and src/styles load nothing from third parties: the font and
+ *   logos are served from public/, and there are no cookies, analytics or
+ *   trackers. Adding any of those requires updating this page.
+ * - Pending mark below: the legal address. Email retention and hosting logs
+ *   are stated generically on purpose (owner's decision, 2026-09-11); name the
+ *   provider here if it ever matters.
+ * - The last paragraph is the control authority notice required by
+ *   Disposición DNPDP 10/2008, updated to the AAIP. Numis's lawyer must
+ *   confirm the wording before launch.
+ */
+import Base from "../layouts/Base.astro";
+import Contenedor from "../components/Contenedor.astro";
+import Hero from "../components/Hero.astro";
+import Pendiente from "../components/Pendiente.astro";
+import Seccion from "../components/Seccion.astro";
+import { CORREO, mailto, RAZON_SOCIAL } from "../data/sitio";
+
+const lead = "Qué datos recibimos cuando usás este sitio, para qué los usamos y cómo pedir que los corrijamos o borremos.";
+const descripcion = `${lead} Sin cookies ni herramientas de analítica.`;
+---
+
+<Base title="Privacidad · Numis" description={descripcion}>
+  <Contenedor>
+    <Hero>
+      <div>
+        <h1 class="display">Qué hacemos con tus datos.</h1>
+        <p class="lead">{lead}</p>
+      </div>
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="papel" class="privacidad">
+    <p class="secundario">Última actualización: 11 de septiembre de 2026.</p>
+
+    <h2 class="titulo-seccion">Quién es responsable</h2>
+    <p class="texto">
+      El responsable de tus datos es {RAZON_SOCIAL}, con domicilio en <Pendiente>falta el domicilio legal</Pendiente>,
+      Ciudad Autónoma de Buenos Aires. Para cualquier consulta sobre tus datos, escribinos a{" "}
+      <a class="enlace" href={mailto("Datos personales")}>{CORREO}</a>.
+    </p>
+
+    <h2 class="titulo-seccion">Cuando nos escribís</h2>
+    <p class="texto">
+      Este sitio no tiene formulario de contacto: no guarda nada de lo que escribís. La única forma de contactarnos
+      es por correo, a <a class="enlace" href={mailto()}>{CORREO}</a>.
+    </p>
+    <p class="texto">
+      Si nos escribís, usamos tu nombre, tu correo y lo que nos cuentes solo para responderte. No los compartimos ni
+      los vendemos, y los guardamos solo mientras hagan falta para responderte.
+    </p>
+
+    <h2 class="titulo-seccion">Cookies y seguimiento</h2>
+    <p class="texto">
+      Este sitio no usa cookies ni herramientas de analítica ni rastreadores. La tipografía y los logos se sirven
+      desde este mismo sitio: las páginas públicas no cargan nada de otros sitios.
+    </p>
+    <p class="texto">
+      Como cualquier sitio web, el servidor que lo aloja puede registrar datos técnicos de cada visita, como la
+      dirección IP y la fecha. No usamos esos registros para identificarte.
+    </p>
+
+    <h2 class="titulo-seccion">Tus derechos</h2>
+    <p class="texto">
+      La Ley 25.326 de Protección de Datos Personales te da derecho a acceder a tus datos, rectificarlos,
+      actualizarlos y pedir que los borremos. Para hacerlo, escribinos a{" "}
+      <a class="enlace" href={mailto("Datos personales")}>{CORREO}</a>.
+    </p>
+    <p class="texto">
+      El acceso es gratuito cada seis meses, o antes si acreditás un interés legítimo (artículo 14, inciso 3 de la
+      ley).
+    </p>
+    <p class="texto">
+      La autoridad de control es la Agencia de Acceso a la Información Pública (AAIP). Si creés que no respetamos tus
+      derechos, podés hacer tu reclamo ante la AAIP.
+    </p>
+    <p class="texto">
+      La Agencia de Acceso a la Información Pública, en su carácter de órgano de control de la Ley 25.326, tiene la
+      atribución de atender las denuncias y reclamos que interpongan quienes resulten afectados en sus derechos por
+      incumplimiento de las normas vigentes en materia de protección de datos personales.
+    </p>
+  </Seccion>
+</Base>

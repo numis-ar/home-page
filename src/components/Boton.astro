@@ -1,0 +1,31 @@
+---
+/**
+ * Boton: Numis button. 2.5px border, hard 4px shadow (6px on hover), 2px radius.
+ * Renders an <a> when `href` is given, a <button> otherwise.
+ * Label must say exactly what happens ("Contanos tu proyecto", never "Enviar"). No arrows.
+ * Mirrors components/boton/Boton.d.ts.
+ */
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends Omit<HTMLAttributes<"a">, "type"> {
+  /** "primario" (paper on green / green on paper) or "hueco" (outline). */
+  variante?: "primario" | "hueco";
+  href?: string;
+  type?: "button" | "submit" | "reset";
+}
+
+const { variante = "primario", href, type = "button", class: className, ...rest } = Astro.props;
+const clase = ["boton", variante === "hueco" && "boton--hueco", className];
+---
+
+{
+  href ? (
+    <a class:list={clase} href={href} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button class:list={clase} type={type} {...(rest as HTMLAttributes<"button">)}>
+      <slot />
+    </button>
+  )
+}

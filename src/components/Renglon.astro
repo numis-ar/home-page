@@ -1,0 +1,21 @@
+---
+/**
+ * Renglon: one concept -> value line of a ticket, joined by a dotted leader.
+ * Without `valor` the value is drawn as <Pendiente />. Mirrors Ticket.d.ts.
+ */
+import Pendiente from "./Pendiente.astro";
+
+export interface Props {
+  concepto: string;
+  /** Missing value: rendered as a pending mark, never as an empty line. */
+  valor?: string;
+  total?: boolean;
+}
+
+const { concepto, valor, total = false } = Astro.props;
+---
+
+<div class:list={["renglon", total && "renglon--total"]}>
+  <dt>{concepto}</dt>
+  <dd>{valor ?? <Pendiente />}</dd>
+</div>

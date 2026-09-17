@@ -1,0 +1,32 @@
+---
+/**
+ * Autores: the byline of a note, "Por Ana, Beto y Carla". Each name links to
+ * the member's block on /nosotros (its id is the member's slug). Used by the
+ * /blog listing and the note page; the link color follows the section, like
+ * every .enlace.
+ */
+import type { IntegranteEntrada } from "../data/equipo";
+
+interface Props {
+  autores: IntegranteEntrada[];
+  class?: string;
+}
+
+const { autores, class: className } = Astro.props;
+// Separator before each name: nothing for the first, " y " for the last, ", " otherwise.
+const separador = (i: number) => (i === 0 ? "" : i === autores.length - 1 ? " y " : ", ");
+---
+
+<p class:list={["autores", className]}>
+  Por{" "}
+  {
+    autores.map((a, i) => (
+      <>
+        {separador(i)}
+        <a class="enlace" href={`/nosotros#${a.id}`}>
+          {a.data.nombre}
+        </a>
+      </>
+    ))
+  }
+</p>

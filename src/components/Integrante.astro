@@ -1,0 +1,42 @@
+---
+/**
+ * Integrante: one member of the team listing on /nosotros, as a box with a
+ * hard border and shadow (like <Puerta>), alternating white and mint inside
+ * the `.equipo-grilla` grid. Optional data is omitted when absent: no bio, no links, no
+ * photo placeholder. A photo, when there is one, must be a real one.
+ */
+interface Props {
+  /** Anchor id (the member's slug), so notes can link to /nosotros#<slug>. */
+  id?: string;
+  nombre: string;
+  especialidad: string;
+  bio?: string;
+  foto?: string;
+  enlaces?: { texto: string; href: string }[];
+  class?: string;
+}
+
+const { id, nombre, especialidad, bio, foto, enlaces = [], class: className } = Astro.props;
+// Capitalize for a standalone line; the collection keeps the lowercase ticket form.
+const area = especialidad.charAt(0).toUpperCase() + especialidad.slice(1);
+---
+
+<article id={id} class:list={["integrante", className]}>
+  {foto && <img class="integrante__foto" src={foto} alt={`Foto de ${nombre}`} loading="lazy" />}
+  <h3>{nombre}</h3>
+  <p class="integrante__area">{area}</p>
+  {bio && <p>{bio}</p>}
+  {
+    enlaces.length > 0 && (
+      <ul class="integrante__enlaces">
+        {enlaces.map((e) => (
+          <li>
+            <a class="enlace" href={e.href}>
+              {e.texto}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</article>

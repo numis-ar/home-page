@@ -1,0 +1,17 @@
+---
+/**
+ * Puerta: large closing action, with a hard 5px green shadow (8px on hover).
+ * Title in first person from whoever touches it. Mirrors components/estructura/Puerta.d.ts.
+ */
+interface Props {
+  href: string;
+  titulo: string;
+  class?: string;
+}
+
+const { href, titulo, class: className } = Astro.props;
+---
+
+<a class:list={["puerta", className]} href={href}>
+  <strong>{titulo}</strong>{" "}<span><slot /></span>
+</a>

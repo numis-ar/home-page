@@ -1,0 +1,17 @@
+---
+/**
+ * Publico: one "con quién trabajamos" column, with a 3px orange rule on top.
+ * Mirrors components/estructura/Publico.d.ts.
+ */
+interface Props {
+  titulo: string;
+  class?: string;
+}
+
+const { titulo, class: className } = Astro.props;
+---
+
+<article class:list={["publico", className]}>
+  <h3>{titulo}</h3>
+  <p><slot /></p>
+</article>

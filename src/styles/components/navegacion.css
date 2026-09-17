@@ -1,0 +1,43 @@
+.logo{display:inline-block;line-height:0;flex:none}
+.logo img{height:2.1rem;width:auto;max-width:none}
+.cabecera{display:flex;align-items:center;justify-content:space-between;padding:var(--e-5) 0}
+.nav{display:flex;gap:1.75rem;align-items:center;font-size:var(--t-chico)}
+.nav a:not(.boton){text-decoration:none;color:var(--menta)}
+.nav .boton{padding:.6rem 1.1rem}
+.nav a:not(.boton):hover{color:var(--blanco)}
+.pie{padding:2.5rem 0;color:var(--menta);font-size:var(--t-chico)}
+.pie .contenedor{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--e-5);flex-wrap:wrap}
+/* Pie ampliado: los datos institucionales van como texto del pie, no como ticket. */
+.pie--con-ficha{padding:var(--e-8) 0 2.5rem}
+.pie--con-ficha .contenedor{display:block}
+.pie__datos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--e-5) var(--e-6);padding-bottom:var(--e-6);border-bottom:var(--perforacion)}
+.pie__dato dt{font-size:var(--t-chico);color:var(--menta)}
+.pie__dato dd{margin-top:var(--e-1);color:var(--blanco);font-weight:600}
+.pie__dato dd a{color:var(--blanco);text-decoration:underline;text-underline-offset:3px}
+.pie__cierre{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--e-5);flex-wrap:wrap;padding-top:var(--e-5)}
+@media (max-width:880px){.pie__datos{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pie .logo img{height:1.6rem}
+/* A 360px no entran dos botones al lado del logo: queda solo la acción principal. */
+@media (max-width:880px){.nav a:not(.boton){display:none}.nav .boton--hueco{display:none}}
+
+/* --- Local additions (not in the design system copy) ---------------------- */
+
+/* Enlaces del pie (/blog, /privacidad), pegados a la línea legal. Van juntos:
+   en pantallas angostas pasan a su propio renglón, debajo de la línea legal y
+   sin sangría, en vez de cortarse entre "Blog" y "Privacidad". */
+.pie__enlace{margin-left:var(--e-3);white-space:nowrap}
+.pie__enlaces{white-space:nowrap}
+@media (max-width:480px){
+  .pie__enlaces{display:block;margin-top:var(--e-2)}
+  .pie__enlaces .pie__enlace:first-child{margin-left:0}
+}
+
+/* Enlaces sueltos del pie (correo, Blog, Privacidad): el texto mide 16px de
+   alto, menos que el mínimo de 24px para tocar (WCAG 2.2, 2.5.8). El padding
+   agranda la zona táctil y el margen negativo lo compensa: el renglón no
+   cambia de alto y se ven igual. */
+.pie__enlace,.pie__dato dd a{display:inline-block;padding-block:var(--e-1);margin-block:calc(var(--e-1) * -1)}
+
+
+/* Pie con tres datos: tres columnas en escritorio, sin una cuarta vacía. */
+@media (min-width:881px){.pie__datos:has(> :last-child:nth-child(3)){grid-template-columns:repeat(3,minmax(0,1fr))}}

@@ -1,0 +1,10 @@
+---
+/** ConSello: positioning wrapper, a ticket with the stamp over its corner. Mirrors Sello.d.ts. */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={["con-sello", className]}><slot /></div>

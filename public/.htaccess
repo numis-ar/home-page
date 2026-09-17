@@ -1,0 +1,33 @@
+# Apache (cPanel) settings for the static build. The build copies this file
+# into dist/, so it ships with every deploy.
+
+DirectoryIndex index.html
+Options -Indexes
+
+# Unknown URLs get the site's own 404 page (src/pages/404.astro).
+ErrorDocument 404 /404.html
+
+# One canonical origin: https://www.numis.ar (`site` in astro.config.mjs).
+# X-Forwarded-Proto covers hosts where nginx terminates TLS in front of Apache;
+# without it, %{HTTPS} is always "off" there and the redirect would loop.
+# If the site is ever tested on a temporary domain, comment out the host rule.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://www.numis.ar%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTP_HOST} !^www\.numis\.ar$ [NC]
+  RewriteRule ^ https://www.numis.ar%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Caching. Files under /_astro/ have a content hash in their name, so they can
+# be cached forever; everything else is revalidated so a deploy shows at once.
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-cache"
+  <If "%{REQUEST_URI} =~ m#^/_astro/#">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+  <If "%{REQUEST_URI} =~ m#^/fonts/#">
+    Header set Cache-Control "public, max-age=2592000"
+  </If>
+</IfModule>

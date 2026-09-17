@@ -1,0 +1,20 @@
+---
+/**
+ * PuertasContacto: the three contact doors from src/data/sitio.ts. Each one
+ * opens an email with its reason as the subject, or, while FORMULARIO_ACTIVO,
+ * leads to the contact form with that reason preselected (see `enlacePuerta`).
+ */
+import Puerta from "./Puerta.astro";
+import Puertas from "./Puertas.astro";
+import { enlacePuerta, puertas } from "../data/sitio";
+---
+
+<Puertas>
+  {
+    puertas.map((p) => (
+      <Puerta href={enlacePuerta(p.motivo)} titulo={p.titulo}>
+        {p.texto}
+      </Puerta>
+    ))
+  }
+</Puertas>

@@ -1,0 +1,78 @@
+---
+/**
+ * Project page, one per published entry of the `proyectos` collection
+ * (src/content/proyectos/<slug>.md with `publicado: true`); unpublished
+ * entries get no page. Hero with the project sheet, the entry's
+ * Markdown body on paper (the long-form `.prosa` styles, shared with the blog
+ * notes), and the same contact closing as the home.
+ * Missing data is marked with <Pendiente> and must be filled in the entry
+ * before publishing. No printer here: the only automatic animation of the
+ * site belongs to the home hero.
+ */
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import CierreContacto from "../../components/CierreContacto.astro";
+import Contenedor from "../../components/Contenedor.astro";
+import Hero from "../../components/Hero.astro";
+import Pendiente from "../../components/Pendiente.astro";
+import Seccion from "../../components/Seccion.astro";
+import Ticket from "../../components/Ticket.astro";
+import { proyectosPublicados, type ProyectoEntrada } from "../../data/proyectos";
+
+export async function getStaticPaths() {
+  return (await proyectosPublicados()).map((proyecto) => ({ params: { slug: proyecto.id }, props: { proyecto } }));
+}
+
+interface Props {
+  proyecto: ProyectoEntrada;
+}
+
+const { proyecto } = Astro.props;
+const { nombre, tipo, descripcion, desde, estado } = proyecto.data;
+const tieneTexto = Boolean(proyecto.body?.trim());
+const { Content } = await render(proyecto);
+---
+
+<Base
+  title={`${nombre} · Proyectos · Numis`}
+  description={descripcion ?? `${nombre}: proyecto de Numis, cooperativa de trabajo (${tipo}).`}
+>
+  <Contenedor>
+    <Hero>
+      <div>
+        <a class="enlace proyecto-pagina__volver" href="/#proyectos">Volver a los proyectos</a>
+        <h1 class="display">{nombre}</h1>
+        <p class="proyecto-pagina__tipo">{tipo}</p>
+        <p class="lead">{descripcion ?? <Pendiente>falta la descripción del proyecto</Pendiente>}</p>
+      </div>
+      <Ticket
+        suelto
+        style="max-width:320px"
+        encabezado="Ficha del proyecto"
+        bajada="Numis, cooperativa de trabajo"
+        renglones={[
+          { concepto: "Contraparte", valor: nombre },
+          { concepto: "Tipo", valor: tipo },
+          { concepto: "Desde", valor: desde },
+          { concepto: "Estado", valor: estado },
+        ]}
+      />
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="papel" aria-label={`Texto del proyecto ${nombre}`}>
+    {
+      tieneTexto ? (
+        <div class="prosa">
+          <Content />
+        </div>
+      ) : (
+        <p class="texto">
+          <Pendiente>falta el texto del proyecto</Pendiente>
+        </p>
+      )
+    }
+  </Seccion>
+
+  <CierreContacto fondo="hondo" />
+</Base>

@@ -1,0 +1,18 @@
+---
+/**
+ * Hero: two columns, content + <Impresora> (or a ticket). One per page. Mirrors Seccion.d.ts.
+ * On desktop the right column sits flush with the content's right edge, and an
+ * interior hero with a right column gets a shared min-height with centered
+ * content (see the "Local additions" in base/layout.css). One-column heroes
+ * keep the system padding.
+ */
+interface Props {
+  /** Fill the viewport height (header included) on desktop. Home only. */
+  pantalla?: boolean;
+  class?: string;
+}
+
+const { pantalla = false, class: className } = Astro.props;
+---
+
+<div class:list={["hero", pantalla && "hero--pantalla", className]}><slot /></div>

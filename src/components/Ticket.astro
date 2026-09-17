@@ -1,0 +1,106 @@
+---
+/**
+ * Ticket: the central Numis metaphor. Comparisons, summaries and short lists,
+ * rendered as <dl> so they read as concept/value pairs.
+ * At most 6 lines plus the total; with more, it is not a ticket.
+ * The footer can be passed as the `pie` prop or as a `pie` slot (for line breaks).
+ * Mirrors components/ticket/Ticket.d.ts.
+ */
+import type { HTMLAttributes } from "astro/types";
+import Renglon from "./Renglon.astro";
+
+export interface RenglonDato {
+  concepto: string;
+  /** Leave it out when the data is missing: the line shows <Pendiente />. */
+  valor?: string;
+}
+
+interface Props extends HTMLAttributes<"div"> {
+  /** Centered title of the receipt. */
+  encabezado?: string;
+  /** Second header line, in faded ink. */
+  bajada?: string;
+  /** Up to 6 concept -> value pairs. */
+  renglones?: RenglonDato[];
+  /** Closing line after the cut: the conclusion. Concept defaults to "Total". */
+  total?: { concepto?: string; valor: string };
+  /** Ticket footer. The only place where a wink is allowed. */
+  pie?: string;
+  /** Decorative barcode at the end (aria-hidden). */
+  barras?: boolean;
+  /** Die-cut top and bottom, white background. */
+  suelto?: boolean;
+  /** Rotated -2deg. Campaign and social only, never on the institutional site. */
+  inclinado?: boolean;
+  /** Wider, for lists of people. */
+  nomina?: boolean;
+  /** Institutional card variant (max 480px, green links). */
+  ficha?: boolean;
+}
+
+const {
+  encabezado,
+  bajada,
+  renglones = [],
+  total,
+  pie,
+  barras = false,
+  suelto = false,
+  inclinado = false,
+  nomina = false,
+  ficha = false,
+  class: className,
+  ...rest
+} = Astro.props;
+
+const tienePie = Boolean(pie) || Astro.slots.has("pie");
+---
+
+<div
+  class:list={[
+    "ticket",
+    suelto && "ticket--suelto",
+    inclinado && "ticket--inclinado",
+    nomina && "ticket--nomina",
+    ficha && "ficha",
+    className,
+  ]}
+  {...rest}
+>
+  {
+    (encabezado || bajada) && (
+      <div class="ticket__enc">
+        {encabezado && <strong>{encabezado}</strong>}
+        {bajada && <span>{bajada}</span>}
+      </div>
+    )
+  }
+  {
+    renglones.length > 0 && (
+      <dl class="ticket__renglones">
+        {renglones.map((r) => (
+          <Renglon concepto={r.concepto} valor={r.valor} />
+        ))}
+      </dl>
+    )
+  }
+  <slot />
+  {
+    total && (
+      <>
+        <hr class="ticket__corte" />
+        <dl>
+          <Renglon concepto={total.concepto ?? "Total"} valor={total.valor} total />
+        </dl>
+      </>
+    )
+  }
+  {
+    tienePie && (
+      <p class="ticket__pie">
+        <slot name="pie">{pie}</slot>
+      </p>
+    )
+  }
+  {barras && <div class="ticket__barras" aria-hidden="true" />}
+</div>

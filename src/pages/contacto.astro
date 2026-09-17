@@ -1,0 +1,76 @@
+---
+/**
+ * Contact page. Structure and copy follow
+ * templates/pagina-institucional/Contacto.dc.html.
+ *
+ * FORMULARIO_ACTIVO (src/data/sitio.ts) decides the route:
+ * - off (today): only the email route. The hero's primary action opens an
+ *   email to hola@numis.ar, the header button does the same, and the doors are
+ *   mailto links with a subject per reason. The form section is not rendered,
+ *   so its scripts are not shipped and nothing links to #escribinos.
+ * - on: the hero offers "Escribir un mensaje" (#escribinos) plus the email, and
+ *   <FormularioContacto> renders the form (see that component for how it
+ *   sends while there is no backend).
+ *
+ * The contact ticket lists confirmed data only. Response time, office hours
+ * and languages were removed until Numis confirms them.
+ */
+import Base from "../layouts/Base.astro";
+import Acciones from "../components/Acciones.astro";
+import Boton from "../components/Boton.astro";
+import Contenedor from "../components/Contenedor.astro";
+import FormularioContacto from "../components/FormularioContacto.astro";
+import Hero from "../components/Hero.astro";
+import PuertasContacto from "../components/PuertasContacto.astro";
+import Seccion from "../components/Seccion.astro";
+import Ticket from "../components/Ticket.astro";
+import { CORREO, FORMULARIO_ACTIVO, mailto, RAZON_SOCIAL_CORTA, SEDE } from "../data/sitio";
+
+const lead =
+  "Contanos qué necesitás: implementar pagos, capacitar a tu equipo, investigar con nosotros o sumarte a la cooperativa.";
+const descripcion = `${lead} Te respondemos por correo.`;
+
+// Header button: the form while it exists, otherwise the email itself.
+const accion = { texto: "Escribinos", href: FORMULARIO_ACTIVO ? "#escribinos" : mailto() };
+---
+
+<Base title="Contacto · Numis" description={descripcion} accion={accion}>
+  <Contenedor>
+    <Hero>
+      <div>
+        <h1 class="display">Hablemos.</h1>
+        <p class="lead">{lead}</p>
+        <Acciones>
+          {
+            FORMULARIO_ACTIVO ? (
+              <>
+                <Boton href="#escribinos">Escribir un mensaje</Boton>
+                <Boton variante="hueco" href={mailto()}>{CORREO}</Boton>
+              </>
+            ) : (
+              <Boton href={mailto()}>Escribir a {CORREO}</Boton>
+            )
+          }
+        </Acciones>
+      </div>
+      <Ticket
+        suelto
+        style="max-width:320px"
+        encabezado="Datos de contacto"
+        bajada="numis.ar"
+        renglones={[
+          { concepto: "Razón social", valor: RAZON_SOCIAL_CORTA },
+          { concepto: "Sede", valor: SEDE },
+        ]}
+        total={{ concepto: "Correo", valor: CORREO }}
+      />
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="hondo" id="motivos">
+    <h2 class="titulo-seccion">¿Cuál es tu caso?</h2>
+    <PuertasContacto />
+  </Seccion>
+
+  {FORMULARIO_ACTIVO && <FormularioContacto />}
+</Base>

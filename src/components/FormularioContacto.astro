@@ -1,0 +1,114 @@
+---
+/**
+ * FormularioContacto: the "Escribinos" section of /contacto (#escribinos), with
+ * its two scripts. Rendered only while FORMULARIO_ACTIVO is true in
+ * src/data/sitio.ts; when it is not rendered, Astro does not ship its scripts.
+ *
+ * While ENDPOINT_FORMULARIO is undefined the form targets mailto: (native
+ * fallback without JS); the first script turns the fields into a readable
+ * email in the visitor's mail client. Once a real endpoint exists, set
+ * ENDPOINT_FORMULARIO and the form posts to it, and update /privacidad.
+ *
+ * The "Motivo" select starts on a disabled, empty placeholder and is required,
+ * so nobody sends a reason they did not pick. The contact doors (and
+ * /contacto?motivo=<valor>) preselect a reason; the email subject is
+ * "Consulta desde numis.ar: <reason>".
+ */
+import Acciones from "./Acciones.astro";
+import Area from "./Area.astro";
+import Boton from "./Boton.astro";
+import Campo from "./Campo.astro";
+import Fila from "./Fila.astro";
+import Formulario from "./Formulario.astro";
+import Par from "./Par.astro";
+import Seccion from "./Seccion.astro";
+import Seleccion from "./Seleccion.astro";
+import Texto from "./Texto.astro";
+import { CORREO, ENDPOINT_FORMULARIO, enlacePrivacidad, mailto, MOTIVOS } from "../data/sitio";
+
+const accion = ENDPOINT_FORMULARIO ?? mailto();
+const porCorreo = ENDPOINT_FORMULARIO === undefined;
+
+const motivos = [
+  { valor: "", texto: "Elegí un motivo", deshabilitada: true, seleccionada: true },
+  ...MOTIVOS.map((m) => ({ valor: m.valor, texto: m.texto })),
+];
+---
+
+<Seccion fondo="papel" id="escribinos">
+  <Par textoAngosto>
+    <div>
+      <h2 class="titulo-seccion">Escribinos</h2>
+      <p class="secundario texto-angosto">
+        Decinos quién sos y qué necesitás. Te respondemos al correo que dejes.
+      </p>
+    </div>
+    <Formulario
+      method="post"
+      action={accion}
+      enctype={porCorreo ? "text/plain" : undefined}
+      data-formulario-contacto={porCorreo ? "correo" : undefined}
+    >
+      <Fila>
+        <Campo etiqueta="Nombre" htmlFor="con-nombre">
+          <Texto id="con-nombre" name="nombre" placeholder="Cómo te llamás" required />
+        </Campo>
+        <Campo etiqueta="Correo" htmlFor="con-mail">
+          <Texto id="con-mail" name="correo" tipo="email" placeholder="vos@ejemplo.ar" required />
+        </Campo>
+      </Fila>
+      <Campo etiqueta="Organización" opcional htmlFor="con-org">
+        <Texto id="con-org" name="organizacion" placeholder="Organización, empresa u organismo" />
+      </Campo>
+      <Campo etiqueta="Motivo" htmlFor="con-tipo">
+        <Seleccion id="con-tipo" name="motivo" opciones={motivos} required />
+      </Campo>
+      <Campo etiqueta="Mensaje" htmlFor="con-mensaje" ayuda="Un par de oraciones alcanzan.">
+        <Area id="con-mensaje" name="mensaje" placeholder="Qué necesitás y para cuándo." />
+      </Campo>
+      <div class="formulario__envio">
+        <Acciones><Boton type="submit">{porCorreo ? "Preparar el correo" : "Enviar mi mensaje"}</Boton></Acciones>
+        <span class="formulario__nota">
+          {porCorreo && "Se abre tu programa de correo con el mensaje armado. "}O escribinos directo a <a class="enlace" href={mailto()}>{CORREO}</a>.{" "}
+          <a class="enlace" href={enlacePrivacidad.href}>Leé cómo tratamos tus datos</a>.
+        </span>
+      </div>
+    </Formulario>
+  </Par>
+</Seccion>
+
+<script>
+  // Preselect the reason when arriving from a door (/contacto?motivo=...).
+  const motivoInicial = new URLSearchParams(window.location.search).get("motivo");
+  const seleccionMotivo = document.querySelector<HTMLSelectElement>("#con-tipo");
+  if (motivoInicial && seleccionMotivo && [...seleccionMotivo.options].some((o) => o.value === motivoInicial)) {
+    seleccionMotivo.value = motivoInicial;
+  }
+</script>
+
+<script>
+  // mailto: fallback while there is no backend. The browser has already run
+  // the native `required`/`type=email` validation when "submit" fires.
+  import { ASUNTO_CONSULTA } from "../data/sitio";
+
+  const formulario = document.querySelector<HTMLFormElement>('[data-formulario-contacto="correo"]');
+
+  formulario?.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    const destino = formulario.getAttribute("action") ?? "";
+    const campo = (nombre: string) => String(new FormData(formulario).get(nombre) ?? "").trim();
+    const motivo = formulario.querySelector<HTMLSelectElement>("select[name=motivo]");
+    const asunto = `${ASUNTO_CONSULTA}: ${motivo?.selectedOptions[0]?.text ?? ""}`;
+    const organizacion = campo("organizacion");
+
+    const cuerpo = [
+      `Nombre: ${campo("nombre")}`,
+      `Correo: ${campo("correo")}`,
+      ...(organizacion ? [`Organización: ${organizacion}`] : []),
+      "",
+      campo("mensaje"),
+    ].join("\n");
+
+    window.location.href = `${destino}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+  });
+</script>

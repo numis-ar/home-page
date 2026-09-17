@@ -1,0 +1,21 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+
+# generated types
+.astro/
+
+# logs
+npm-debug.log*
+
+# environment
+.env
+.env.*
+
+# macOS
+.DS_Store
+
+# deploy bundles
+*.zip

@@ -1,0 +1,46 @@
+---
+/**
+ * Pie: institutional footer. With `datos`, the institutional data is listed as
+ * plain footer text (never as a ticket). The motto uses Arial Bold on purpose.
+ * The default slot is the legal line. Mirrors components/navegacion/Pie.d.ts;
+ * `valor` is a string plus an optional `href` instead of a React node.
+ */
+import Logo from "./Logo.astro";
+
+export interface DatoPie {
+  concepto: string;
+  valor: string;
+  href?: string;
+}
+
+interface Props {
+  logoSrc?: string;
+  lema?: string;
+  datos?: DatoPie[];
+  class?: string;
+}
+
+const { logoSrc, lema = "finanzas para todas las personas", datos = [], class: className } = Astro.props;
+const conDatos = datos.length > 0;
+---
+
+<footer class:list={["pie", conDatos && "pie--con-ficha", className]}>
+  <div class="contenedor">
+    {
+      conDatos && (
+        <dl class="pie__datos">
+          {datos.map((d) => (
+            <div class="pie__dato">
+              <dt>{d.concepto}</dt>
+              <dd>{d.href ? <a href={d.href}>{d.valor}</a> : d.valor}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+    <div class:list={[conDatos && "pie__cierre"]}>
+      <div><Logo src={logoSrc} /><span class="lema">{lema}</span></div>
+      <span><slot /></span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,27 @@
+---
+/**
+ * Sello: the cooperative's tilted stamp (orange outline, -12deg, multiply).
+ * One per page, only on light backgrounds, always overlapping a ticket inside <ConSello>.
+ * Decorative: aria-hidden, so it must not carry information found nowhere else.
+ * Mirrors components/sello/Sello.d.ts.
+ */
+interface Props {
+  titulo?: string;
+  subtitulo?: string;
+  /** Path to the orange isotype. */
+  isotipo?: string;
+  class?: string;
+}
+
+const {
+  titulo = "Cooperativa",
+  subtitulo = "de trabajo",
+  isotipo = "/logo/numis-isotipo.svg",
+  class: className,
+} = Astro.props;
+---
+
+<div class:list={["sello", className]} aria-hidden="true">
+  <img src={isotipo} alt="" width="35" height="35" />
+  <span>{titulo}<small>{subtitulo}</small></span>
+</div>

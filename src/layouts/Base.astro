@@ -1,0 +1,112 @@
+---
+/**
+ * Base layout shared by every page: Spanish document, metadata (canonical,
+ * Open Graph, Twitter card, Organization JSON-LD), favicon, font preload, the
+ * single Numis stylesheet and the site chrome (header, <main> and footer).
+ * Pages only pass what differs: title, description and, optionally, the
+ * header's primary button. While a note is published, the header and footer
+ * link to /blog and the head advertises the RSS feed (/blog/rss.xml). Every URL is absolute against `site`
+ * (https://www.numis.ar, see astro.config.mjs).
+ */
+import "../styles/numis.css";
+import Boton from "../components/Boton.astro";
+import Cabecera from "../components/Cabecera.astro";
+import Contenedor from "../components/Contenedor.astro";
+import Pie from "../components/Pie.astro";
+import { BLOG_TITULO, notasVisibles, RUTA_RSS } from "../data/blog";
+import { proyectosPublicados } from "../data/proyectos";
+import {
+  accionPrincipal,
+  CORREO,
+  datosPie,
+  enlaceBlog,
+  enlacePrivacidad,
+  LEGAL,
+  navegacion,
+  RAZON_SOCIAL,
+  type Enlace,
+} from "../data/sitio";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Primary button of the header. Defaults to Escribinos -> /contacto. */
+  accion?: Enlace;
+}
+
+const { title, description, accion = accionPrincipal } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const inicio = new URL("/", Astro.site);
+const ogImagen = new URL("/og.png", Astro.site);
+const hayNotas = (await notasVisibles()).length > 0;
+const enlaces = navegacion({ hayProyectos: (await proyectosPublicados()).length > 0, hayNotas });
+
+// Organization structured data: confirmed facts only, no sameAs (there are no
+// social profiles).
+const organizacion = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Numis",
+  legalName: RAZON_SOCIAL,
+  url: inicio.href,
+  logo: new URL("/logo/numis-logo-sobre-verde.svg", Astro.site).href,
+  email: CORREO,
+  address: { "@type": "PostalAddress", addressLocality: "Ciudad Autónoma de Buenos Aires", addressCountry: "AR" },
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {hayNotas && <link rel="alternate" type="application/rss+xml" title={BLOG_TITULO} href={new URL(RUTA_RSS, Astro.site)} />}
+    <link rel="preload" href="/fonts/archivo-variable.woff2" as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content="Numis" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImagen} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Logo de Numis, la frase «Pagos con reglas que se pueden ver.» y el lema «finanzas para todas las personas»."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(organizacion)} />
+  </head>
+  <body>
+    <Contenedor>
+      <Cabecera>
+        {
+          enlaces.map((e) => (
+            <Boton variante="hueco" href={e.href}>
+              {e.texto}
+            </Boton>
+          ))
+        }
+        <Boton href={accion.href}>{accion.texto}</Boton>
+      </Cabecera>
+    </Contenedor>
+
+    <main>
+      <slot />
+    </main>
+
+    <Pie datos={datosPie}>
+      {LEGAL}
+      <span class="pie__enlaces">
+        {hayNotas && <a class="enlace pie__enlace" href={enlaceBlog.href}>{enlaceBlog.texto}</a>}
+        <a class="enlace pie__enlace" href={enlacePrivacidad.href}>{enlacePrivacidad.texto}</a>
+      </span>
+    </Pie>
+  </body>
+</html>

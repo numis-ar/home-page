@@ -1,0 +1,10 @@
+---
+/** Puertas: grid of doors at the end of a page. Mirrors Puerta.d.ts. */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={["puertas", className]}><slot /></div>

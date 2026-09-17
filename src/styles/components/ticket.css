@@ -1,0 +1,55 @@
+.ticket{background:var(--papel);color:var(--tinta);font-variation-settings:"wdth" var(--wdth-angosto);font-weight:var(--peso-medio);font-variant-numeric:tabular-nums;font-size:var(--t-ticket);line-height:1.55;padding:1.4rem 1.3rem 2.2rem;
+  -webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/14px 100%;
+          mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 50%/14px 100%}
+.ticket--suelto{background:var(--blanco);padding-top:2.2rem;
+  -webkit-mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) top/14px 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/14px 51% repeat-x;
+          mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) top/14px 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/14px 51% repeat-x;
+  filter:drop-shadow(0 2px 0 var(--borde-ticket-suelto))}
+.ticket--inclinado{transform:rotate(-2deg)}
+.ticket--nomina{max-width:560px;font-size:.88rem;padding:2.2rem 1.6rem}
+.ticket--nomina .ticket__renglones{gap:.6rem}
+.ticket__enc{text-align:center;margin-bottom:var(--e-4)}
+.ticket__enc strong{display:block;font-weight:var(--peso-fuerte);font-size:.92rem}
+.ticket__enc span{color:var(--desvaido)}
+.ticket__renglones{display:grid;gap:.35rem}
+.renglon{display:flex;align-items:baseline;gap:.4rem}
+.renglon dt{flex:none}
+.renglon::after{content:"";order:1;flex:1;border-bottom:1.5px dotted var(--desvaido);transform:translateY(-.25em)}
+.renglon dd{order:2;flex:none;text-align:right;font-weight:600}
+.renglon--total{font-size:.95rem;font-weight:var(--peso-fuerte)}
+.renglon--total dd{font-weight:800}
+.ticket__corte{border:0;border-top:1.5px dashed var(--tinta);margin:var(--e-4) 0 .8rem}
+.ticket__pie{margin-top:1.2rem;text-align:center;color:var(--desvaido)}
+.ticket__barras{height:34px;margin:var(--e-4) auto 0;width:78%;background:repeating-linear-gradient(90deg,var(--tinta) 0 2px,transparent 2px 4px,var(--tinta) 4px 5px,transparent 5px 8px,var(--tinta) 8px 11px,transparent 11px 12px)}
+/* QR impreso dentro del ticket */
+.ticket{position:relative}
+.ticket__qr{width:200px;max-width:100%;margin:var(--e-4) auto var(--e-2);color:var(--tinta);transition:opacity .3s}
+.ticket__qr svg{width:100%;height:auto}
+.ticket__qr-leyenda{text-align:center;font-weight:var(--peso-fuerte)}
+.ticket--usado .ticket__qr{opacity:.22}
+@media (prefers-reduced-motion:reduce){.ticket__qr{transition:none}}
+.ficha{max-width:480px}
+.ficha .renglon dd a{color:var(--verde)}
+.pendiente{background:var(--amarillo-pendiente);color:var(--tinta);padding:0 .3em;outline:1px dashed var(--naranja)}
+
+/* Impresora: el único movimiento automático del sitio. Uno por página. */
+.impresora{position:relative;max-width:360px;width:100%}
+.impresora__ranura{height:26px;background:var(--verde-hondo);border-radius:6px 6px 2px 2px;position:relative;z-index:2}
+.impresora__ranura::after{content:"";position:absolute;left:14px;right:14px;bottom:6px;height:4px;background:#011A0E;border-radius:2px}
+.impresora__salida{overflow:hidden;margin:0 14px;padding-bottom:18px}
+.impresora .ticket{animation:imprimir var(--impresion-duracion) steps(28,end) var(--impresion-retraso) both}
+@keyframes imprimir{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){.impresora .ticket{animation:none}}
+
+/* --- Local additions (not in the design system copy) ---------------------- */
+
+/* Renglones a 320px: la línea de puntos nunca desaparece del todo y, si el
+   concepto y el valor no entran juntos, el valor pasa a dos líneas (alineado
+   a la derecha) en vez de salirse del ticket. */
+.renglon::after{min-width:var(--e-2)}
+.renglon dd{flex:0 1 auto;min-width:0}
+
+/* Hasta 360px, todos los tickets (la nómina incluida) con 1rem de margen
+   lateral: así "Razón social ... Coop. de Trabajo Numis Ltda." y "Sebastian
+   Marchano ... software y normativa" entran en un renglón a 320px. */
+@media (max-width:360px){.ticket{padding-inline:var(--e-4)}}

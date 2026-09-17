@@ -1,0 +1,23 @@
+/* Formulario: bordes duros, radio 0, sin sombra. El foco es el contorno naranja del sistema. */
+.formulario{display:grid;gap:var(--e-5);max-width:640px}
+.formulario__fila{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--e-5)}
+.campo{display:grid;gap:var(--e-2)}
+.campo__etiqueta{font-weight:var(--peso-fuerte);font-size:var(--t-chico);color:var(--tinta)}
+.seccion .campo__etiqueta{color:var(--blanco)}
+.seccion--papel .campo__etiqueta{color:var(--tinta)}
+.campo__opcional{font-weight:400;color:var(--gris-texto)}
+.campo__control{font:inherit;font-size:var(--t-base);font-family:var(--fuente);color:var(--tinta);background:var(--blanco);border:2.5px solid var(--tinta);border-radius:0;padding:.7rem .8rem;width:100%;transition:box-shadow var(--rapido)}
+.campo__control:hover{box-shadow:var(--sombra-boton)}
+.campo__control:focus{box-shadow:var(--sombra-boton)}
+.campo__control::placeholder{color:var(--desvaido)}
+textarea.campo__control{min-height:9rem;resize:vertical;line-height:1.5}
+/* Control nativo a propósito: el sistema no tiene iconografía y no vamos a dibujar un chevron. */
+select.campo__control{cursor:pointer;padding-right:.5rem}
+.campo__ayuda{font-size:var(--t-chico);color:var(--gris-texto)}
+.seccion .campo__ayuda{color:var(--menta)}
+.seccion--papel .campo__ayuda{color:var(--gris-texto)}
+.formulario__envio{display:flex;align-items:center;gap:var(--e-5);flex-wrap:wrap;margin-top:var(--e-2)}
+.formulario__envio .acciones{margin-top:0}
+.formulario__nota{font-size:var(--t-chico);color:var(--gris-texto);max-width:38ch}
+@media (max-width:880px){.formulario__fila{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.campo__control{transition:none}}

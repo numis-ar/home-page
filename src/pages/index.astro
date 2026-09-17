@@ -1,0 +1,198 @@
+---
+/**
+ * Home. Structure follows templates/pagina-institucional/PaginaInstitucional.dc.html;
+ * copy started from that template and from ui_kits/sitio-institucional and was
+ * then revised with Numis in the site copy review.
+ */
+import Base from "../layouts/Base.astro";
+import Acciones from "../components/Acciones.astro";
+import Boton from "../components/Boton.astro";
+import CierreContacto from "../components/CierreContacto.astro";
+import ConSello from "../components/ConSello.astro";
+import Contenedor from "../components/Contenedor.astro";
+import Hero from "../components/Hero.astro";
+import Impresora from "../components/Impresora.astro";
+import Obra from "../components/Obra.astro";
+import Par from "../components/Par.astro";
+import Paso from "../components/Paso.astro";
+import Pasos from "../components/Pasos.astro";
+import Proyectos from "../components/Proyectos.astro";
+import Publico from "../components/Publico.astro";
+import Publicos from "../components/Publicos.astro";
+import Seccion from "../components/Seccion.astro";
+import Sello from "../components/Sello.astro";
+import Ticket from "../components/Ticket.astro";
+import { equipoOrdenado } from "../data/equipo";
+import { proyectosPublicados, rutaProyecto } from "../data/proyectos";
+import { EQUIPO_BAJADA, MISION_FRASE, VISION } from "../data/sitio";
+
+// Also the page's meta description.
+const lead = "Numis es una cooperativa de trabajo. Diseñamos e implementamos pagos con software libre.";
+
+// Published entries of the `proyectos` collection. With none published the
+// band is not rendered at all. A published entry missing its logo or
+// description shows it as pending, so fill those in before publishing.
+const proyectos = (await proyectosPublicados()).map((p) => ({
+  nombre: p.data.nombre,
+  tipo: p.data.tipo,
+  logo: p.data.logo,
+  descripcion: p.data.descripcion,
+  href: rutaProyecto(p),
+}));
+
+const obras = [
+  {
+    verbo: "Investigar.",
+    nombre: "Investigación aplicada",
+    texto: "Informes y estudios técnicos sobre medios de pago, políticas públicas y su impacto social.",
+  },
+  {
+    verbo: "Formar.",
+    nombre: "Capacitación",
+    texto: "Programas de formación técnica para organizaciones sociales, profesionales, organismos públicos y empresas.",
+  },
+  {
+    verbo: "Articular.",
+    nombre: "Redes y diálogo",
+    texto: "Participamos en mesas de diálogo y redes de la sociedad civil sobre medios de pago y software libre.",
+  },
+  {
+    verbo: "Implementar.",
+    nombre: "Llave en mano",
+    texto: "Nos ocupamos del proyecto completo, del diseño a la puesta en marcha, y seguimos su impacto social.",
+  },
+  {
+    verbo: "Integrar.",
+    nombre: "A medida",
+    texto: "Integramos pagos libres con los sistemas que ya existen.",
+  },
+];
+
+// From the `equipo` collection (src/content/equipo), also listed on /nosotros.
+const equipo = (await equipoOrdenado()).map((i) => ({ concepto: i.data.nombre, valor: i.data.especialidad }));
+---
+
+<Base title="Numis · Pagos con software libre" description={lead}>
+  <Contenedor>
+    <Hero pantalla>
+      <div>
+        <h1 class="display">Pagos con reglas que se pueden ver.</h1>
+        <p class="lead">{lead}</p>
+        <Acciones>
+          <Boton href="#contacto">Contanos tu proyecto</Boton>
+          <Boton variante="hueco" href="#como">Ver cómo funciona</Boton>
+        </Acciones>
+      </div>
+      <Impresora resumen="Ticket del sistema de pagos actual: comisión en cada venta, compras registradas, reglas que no se ven y código cerrado. Total: lo pagás vos.">
+        <Ticket
+          encabezado="Sistema de pagos"
+          bajada="hoy, como siempre"
+          renglones={[
+            { concepto: "Comisión", valor: "en cada venta" },
+            { concepto: "Tus compras", valor: "registradas" },
+            { concepto: "Las reglas", valor: "no se ven" },
+            { concepto: "El código", valor: "cerrado" },
+          ]}
+          total={{ valor: "lo pagás vos" }}
+          barras
+        >
+          <Fragment slot="pie">Conserve este ticket.<br />No va a cambiar solo.</Fragment>
+        </Ticket>
+      </Impresora>
+    </Hero>
+  </Contenedor>
+
+  {
+    proyectos.length > 0 && (
+      <Seccion class="seccion--banda" id="proyectos" aria-label="Proyectos en curso">
+        <Proyectos banda proyectos={proyectos} />
+      </Seccion>
+    )
+  }
+
+  <Seccion fondo="papel" id="por-que">
+    <Par>
+      <ConSello>
+        <Ticket
+          suelto
+          encabezado="Numis"
+          bajada="la otra cuenta"
+          renglones={[
+            { concepto: "Quien compra", valor: "protege sus datos" },
+            { concepto: "Quien vende", valor: "declara lo que cobra" },
+            { concepto: "Software", valor: "libre y auditable" },
+            { concepto: "Organización", valor: "cooperativa" },
+          ]}
+          total={{ valor: "control propio" }}
+        />
+        <Sello />
+      </ConSello>
+      <div>
+        <h2 class="titulo">Otra forma de hacer las cuentas.</h2>
+        <p class="texto">
+          Usamos software libre. Quien compra paga como con efectivo, sin dar sus datos. Quien vende cobra de forma
+          transparente y puede declarar cada cobro.
+        </p>
+        <p class="texto">{MISION_FRASE}</p>
+        <p class="texto">{VISION}</p>
+      </div>
+    </Par>
+  </Seccion>
+
+  <Seccion fondo="hondo" id="como">
+    <h2 class="titulo-seccion">Cómo funciona un pago</h2>
+    {/*
+      Steps started from the design system (components/estructura/estructura.card.html)
+      and were revised with Numis in the site copy review. Public copy names no
+      payment system on purpose: it only says "software libre".
+    */}
+    <Pasos>
+      <Paso titulo="Quien compra carga su billetera">
+        Pasa dinero de su cuenta a la billetera, como quien retira efectivo.
+      </Paso>
+      <Paso titulo="Paga en el comercio">Confirma el pago. Sus datos personales no viajan con el pago.</Paso>
+      <Paso titulo="El comercio cobra">El dinero llega a la cuenta del comercio, listo para declarar.</Paso>
+    </Pasos>
+  </Seccion>
+
+  <Seccion id="para-quien">
+    <h2 class="titulo-seccion">Con quién trabajamos</h2>
+    <Publicos>
+      <Publico titulo="Organizaciones sociales y cooperativas">
+        Te acompañamos a cobrar y pagar con herramientas libres, que tu organización puede conocer y controlar.
+      </Publico>
+      <Publico titulo="Sector público">
+        Estudios e informes técnicos para diseñar políticas públicas de pagos con información propia.
+      </Publico>
+      <Publico titulo="Bancos y empresas">
+        Integramos pagos libres con los sistemas que ya usan, dentro del marco regulatorio vigente.
+      </Publico>
+    </Publicos>
+  </Seccion>
+
+  <Seccion fondo="hondo" id="hacemos">
+    <h2 class="titulo-seccion">Qué hacemos</h2>
+    {
+      obras.map((o) => (
+        <Obra verbo={o.verbo} nombre={o.nombre}>
+          {o.texto}
+        </Obra>
+      ))
+    }
+  </Seccion>
+
+  <Seccion id="equipo">
+    <Par textoAngosto>
+      <div>
+        <h2 class="titulo-seccion">Equipo</h2>
+        <p class="secundario texto-angosto">{EQUIPO_BAJADA}</p>
+        <Acciones>
+          <Boton variante="hueco" href="/nosotros">Conocer al equipo</Boton>
+        </Acciones>
+      </div>
+      <Ticket suelto nomina encabezado="Equipo Numis" bajada="CABA, Argentina" renglones={equipo} />
+    </Par>
+  </Seccion>
+
+  <CierreContacto />
+</Base>

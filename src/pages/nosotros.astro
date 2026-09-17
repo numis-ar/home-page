@@ -1,0 +1,82 @@
+---
+/**
+ * Nosotros: who Numis is. Hero with the institutional ticket (no printer: the
+ * only automatic animation of the site belongs to the home hero), mission and
+ * vision on paper, the full team from the `equipo` collection, and the same
+ * contact closing as the home.
+ *
+ * Copy: the lead was rewritten with Numis in the site copy review; mission
+ * and vision come from src/data/sitio.ts. The h1 is a draft that Numis must
+ * validate.
+ */
+import Base from "../layouts/Base.astro";
+import CierreContacto from "../components/CierreContacto.astro";
+import Contenedor from "../components/Contenedor.astro";
+import Hero from "../components/Hero.astro";
+import Integrante from "../components/Integrante.astro";
+import Publico from "../components/Publico.astro";
+import Publicos from "../components/Publicos.astro";
+import Seccion from "../components/Seccion.astro";
+import Ticket from "../components/Ticket.astro";
+import { equipoOrdenado } from "../data/equipo";
+import { EQUIPO_BAJADA, FORMA, MISION, RAZON_SOCIAL_CORTA, SEDE, TECNOLOGIA, VISION } from "../data/sitio";
+
+const lead =
+  "Diseñamos e implementamos pagos con software libre. Trabajamos entre sectores: organizaciones sociales, sector público, bancos y empresas. Investigamos, formamos e integramos para que las reglas de los pagos se puedan ver.";
+const descripcion =
+  "Quiénes somos, para qué existimos y quiénes hacemos Numis, la cooperativa de trabajo que diseña e implementa pagos con software libre.";
+
+const equipo = await equipoOrdenado();
+---
+
+<Base title="Nosotros · Numis" description={descripcion}>
+  <Contenedor>
+    <Hero>
+      <div>
+        <h1 class="display">Somos una cooperativa de trabajo.</h1>
+        <p class="lead">{lead}</p>
+      </div>
+      <Ticket
+        suelto
+        style="max-width:320px"
+        encabezado="Numis"
+        bajada="quiénes somos"
+        renglones={[
+          { concepto: "Razón social", valor: RAZON_SOCIAL_CORTA },
+          { concepto: "Sede", valor: SEDE },
+          { concepto: "Tecnología", valor: TECNOLOGIA },
+        ]}
+        total={{ concepto: "Forma", valor: FORMA }}
+      />
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="papel" id="mision">
+    <h2 class="titulo-seccion">Para qué existimos</h2>
+    <Publicos class="publicos--dos">
+      <Publico titulo="Misión">{MISION}</Publico>
+      <Publico titulo="Visión">{VISION}</Publico>
+    </Publicos>
+  </Seccion>
+
+  <Seccion id="equipo">
+    <h2 class="titulo-seccion">Equipo</h2>
+    <p class="lead nosotros__bajada">{EQUIPO_BAJADA}</p>
+    <div class="equipo-grilla">
+      {
+        equipo.map((i) => (
+          <Integrante
+            id={i.id}
+            nombre={i.data.nombre}
+            especialidad={i.data.especialidad}
+            bio={i.data.bio}
+            foto={i.data.foto}
+            enlaces={i.data.enlaces}
+          />
+        ))
+      }
+    </div>
+  </Seccion>
+
+  <CierreContacto />
+</Base>

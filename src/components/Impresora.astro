@@ -1,0 +1,22 @@
+---
+/**
+ * Impresora: hero printer that prints the ticket (2.6s, 28 steps). The only
+ * automatic motion on a page: one per page, hero only. The animation is pure
+ * CSS and is disabled by prefers-reduced-motion.
+ * The inner <Ticket> must not be `suelto`.
+ * Mirrors components/ticket/Impresora.d.ts.
+ */
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {
+  /** aria-label: text summary of the whole ticket (the animation adds nothing for screen readers). */
+  resumen: string;
+}
+
+const { resumen, class: className, ...rest } = Astro.props;
+---
+
+<div class:list={["impresora", className]} role="img" aria-label={resumen} {...rest}>
+  <div class="impresora__ranura"></div>
+  <div class="impresora__salida"><slot /></div>
+</div>
