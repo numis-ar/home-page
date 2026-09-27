@@ -4,7 +4,7 @@ fecha: 2026-09-27
 bajada: El 16 de septiembre co-organizamos con ODIA un encuentro con Christian Grothoff, creador de GNU Taler, para pensar qué pasa con nuestros datos cuando pagamos en digital y qué alternativas concretas existen. Esta es la crónica desde el lado de Numis.
 autores:
   - sebastian-marchano
-publicado: false
+publicado: true
 ---
 El 16 de septiembre, junto a [ODIA](https://odia.ar/), recibimos en Buenos Aires a **Christian Grothoff**, uno de los creadores de [GNU Taler](https://taler.net/es/), para discutir una pregunta que atraviesa lo cotidiano: ¿pagar con medios digitales tiene que implicar dejar un registro de todo lo que hacemos?
 
