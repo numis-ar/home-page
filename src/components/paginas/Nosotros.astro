@@ -1,0 +1,84 @@
+---
+/**
+ * Nosotros/About us: who Numis is, shared by the three locales. Hero with the
+ * institutional ticket (no printer: the only automatic animation of the site
+ * belongs to the home hero), mission and vision on paper, the full team from
+ * the language's `equipo` collection, and the same contact closing as the
+ * home.
+ */
+import Base from "../../layouts/Base.astro";
+import CierreContacto from "../../components/CierreContacto.astro";
+import Contenedor from "../../components/Contenedor.astro";
+import Hero from "../../components/Hero.astro";
+import Integrante from "../../components/Integrante.astro";
+import Publico from "../../components/Publico.astro";
+import Publicos from "../../components/Publicos.astro";
+import Seccion from "../../components/Seccion.astro";
+import Ticket from "../../components/Ticket.astro";
+import { equipoOrdenado } from "../../data/equipo";
+import { t, type Idioma } from "../../data/i18n";
+import { FORMA, RAZON_SOCIAL_CORTA, SEDE, TECNOLOGIA } from "../../data/sitio";
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const txt = t(idioma).nosotros;
+
+const equipo = await equipoOrdenado(idioma);
+---
+
+<Base title={txt.titulo} description={txt.descripcion} idioma={idioma}>
+  <Contenedor>
+    <Hero>
+      <div>
+        <h1 class="display">{txt.h1}</h1>
+        <p class="lead">{txt.lead}</p>
+      </div>
+      <Ticket
+        suelto
+        style="max-width:320px"
+        encabezado={txt.ticket.encabezado}
+        bajada={txt.ticket.bajada}
+        renglones={[
+          { concepto: txt.ticket.razonSocial, valor: RAZON_SOCIAL_CORTA },
+          { concepto: txt.ticket.sede, valor: SEDE },
+          { concepto: txt.ticket.tecnologia, valor: TECNOLOGIA[idioma] },
+        ]}
+        total={{ concepto: txt.ticket.forma, valor: FORMA[idioma] }}
+        idioma={idioma}
+      />
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="papel" id="mision">
+    <h2 class="titulo-seccion">{txt.misionTitulo}</h2>
+    <Publicos class="publicos--dos">
+      <Publico titulo={txt.misionCardTitulo}>{txt.mision}</Publico>
+      <Publico titulo={txt.visionTitulo}>{t(idioma).inicio.vision}</Publico>
+    </Publicos>
+  </Seccion>
+
+  <Seccion id="equipo">
+    <h2 class="titulo-seccion">{txt.equipoTitulo}</h2>
+    <p class="lead nosotros__bajada">{t(idioma).inicio.equipoBajada}</p>
+    <div class="equipo-grilla">
+      {
+        equipo.map((i) => (
+          <Integrante
+            id={i.id}
+            nombre={i.data.nombre}
+            especialidad={i.data.especialidad}
+            bio={i.data.bio}
+            foto={i.data.foto}
+            enlaces={i.data.enlaces}
+            idioma={idioma}
+          />
+        ))
+      }
+    </div>
+  </Seccion>
+
+  <CierreContacto idioma={idioma} />
+</Base>

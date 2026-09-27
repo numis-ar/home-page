@@ -1,0 +1,90 @@
+---
+/**
+ * Project page, one per published entry of the page language's `proyectos`
+ * collection; unpublished entries get no page. Hero with the project sheet,
+ * the entry's Markdown body on paper (the long-form `.prosa` styles, shared
+ * with the blog notes), and the same contact closing as the home. Missing
+ * data is marked with <Pendiente> and must be filled in the entry before
+ * publishing. No printer here: the only automatic animation of the site
+ * belongs to the home hero.
+ *
+ * `alternativas` lists the languages where the same slug is published (the
+ * footer switcher and the hreflang links read it).
+ */
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import CierreContacto from "../../components/CierreContacto.astro";
+import Contenedor from "../../components/Contenedor.astro";
+import Hero from "../../components/Hero.astro";
+import Pendiente from "../../components/Pendiente.astro";
+import Seccion from "../../components/Seccion.astro";
+import Ticket from "../../components/Ticket.astro";
+import { proyectosPublicados, type ProyectoEntrada } from "../../data/proyectos";
+import { conLocale, IDIOMAS, t, type Idioma } from "../../data/i18n";
+
+interface Props {
+  proyecto: ProyectoEntrada;
+  idioma: Idioma;
+}
+
+const { proyecto, idioma } = Astro.props;
+const txt = t(idioma).proyectos.pagina;
+const { nombre, tipo, descripcion, desde, estado } = proyecto.data;
+const tieneTexto = Boolean(proyecto.body?.trim());
+const { Content } = await render(proyecto);
+
+// The same project in the other languages: same slug published there.
+const slugsPorIdioma = await Promise.all(
+  IDIOMAS.map(async (i) => ({ idioma: i, slugs: new Set((await proyectosPublicados(i)).map((p) => p.id)) })),
+);
+const alternativas = slugsPorIdioma
+  .filter(({ slugs }) => slugs.has(proyecto.id))
+  .map(({ idioma: i }) => ({ idioma: i, href: conLocale(i, `/proyectos/${proyecto.id}`) }));
+---
+
+<Base
+  title={`${nombre} · ${txt.tituloSeccion} · Numis`}
+  description={descripcion ?? `${nombre}: proyecto de Numis, cooperativa de trabajo (${tipo}).`}
+  idioma={idioma}
+  alternativas={alternativas}
+>
+  <Contenedor>
+    <Hero>
+      <div>
+        <a class="enlace proyecto-pagina__volver" href={conLocale(idioma, "/#proyectos")}>{txt.volver}</a>
+        <h1 class="display">{nombre}</h1>
+        <p class="proyecto-pagina__tipo">{tipo}</p>
+        <p class="lead">{descripcion ?? <Pendiente idioma={idioma}>{txt.faltaDescripcion}</Pendiente>}</p>
+      </div>
+      <Ticket
+        suelto
+        style="max-width:320px"
+        encabezado={txt.fichaEncabezado}
+        bajada={txt.fichaBajada}
+        renglones={[
+          { concepto: txt.contraparte, valor: nombre },
+          { concepto: txt.tipo, valor: tipo },
+          { concepto: txt.desde, valor: desde },
+          { concepto: txt.estado, valor: estado },
+        ]}
+        idioma={idioma}
+      />
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="papel" aria-label={`${nombre}`}>
+    {
+      tieneTexto ? (
+        <div class="prosa">
+          <Content />
+        </div>
+      ) : (
+        <p class="texto">
+          <Pendiente idioma={idioma}>{txt.faltaTexto}</Pendiente>
+        </p>
+      )
+    }
+  </Seccion>
+
+  <CierreContacto fondo="hondo" idioma={idioma} />
+</Base>

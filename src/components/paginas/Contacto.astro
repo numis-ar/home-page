@@ -1,0 +1,83 @@
+---
+/**
+ * Contact page, shared by the three locales. FORMULARIO_ACTIVO
+ * (src/data/sitio.ts) decides the route:
+ * - off (today): only the email route. The hero's primary action opens an
+ *   email to hola@numis.ar, the header button does the same, and the doors are
+ *   mailto links with a subject per reason. The form section is not rendered,
+ *   so its scripts are not shipped and nothing links to #escribinos.
+ * - on: the hero offers the form (#escribinos) plus the email, and
+ *   <FormularioContacto> renders it.
+ *
+ * The contact ticket lists confirmed data only. Response time, office hours
+ * and languages were removed until Numis confirms them.
+ */
+import Base from "../../layouts/Base.astro";
+import Acciones from "../../components/Acciones.astro";
+import Boton from "../../components/Boton.astro";
+import Contenedor from "../../components/Contenedor.astro";
+import FormularioContacto from "../../components/FormularioContacto.astro";
+import Hero from "../../components/Hero.astro";
+import PuertasContacto from "../../components/PuertasContacto.astro";
+import Seccion from "../../components/Seccion.astro";
+import Ticket from "../../components/Ticket.astro";
+import { t, type Idioma } from "../../data/i18n";
+import { CORREO, FORMULARIO_ACTIVO, mailto, RAZON_SOCIAL_CORTA, SEDE } from "../../data/sitio";
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const txt = t(idioma).contacto;
+
+// Header button: the form while it exists, otherwise the email itself.
+const accion = { texto: t(idioma).accion.escribinos, href: FORMULARIO_ACTIVO ? "#escribinos" : mailto() };
+---
+
+<Base
+  title={txt.titulo}
+  description={`${txt.lead} ${txt.descripcionSufijo}`}
+  idioma={idioma}
+  accion={accion}
+>
+  <Contenedor>
+    <Hero>
+      <div>
+        <h1 class="display">{txt.h1}</h1>
+        <p class="lead">{txt.lead}</p>
+        <Acciones>
+          {
+            FORMULARIO_ACTIVO ? (
+              <>
+                <Boton href="#escribinos">{txt.botonFormulario}</Boton>
+                <Boton variante="hueco" href={mailto()}>{CORREO}</Boton>
+              </>
+            ) : (
+              <Boton href={mailto()}>{txt.botonCorreo.replace("{correo}", CORREO)}</Boton>
+            )
+          }
+        </Acciones>
+      </div>
+      <Ticket
+        suelto
+        style="max-width:320px"
+        encabezado={txt.ticket.encabezado}
+        bajada={txt.ticket.bajada}
+        renglones={[
+          { concepto: txt.ticket.razonSocial, valor: RAZON_SOCIAL_CORTA },
+          { concepto: txt.ticket.sede, valor: SEDE },
+        ]}
+        total={{ concepto: txt.ticket.correo, valor: CORREO }}
+        idioma={idioma}
+      />
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="hondo" id="motivos">
+    <h2 class="titulo-seccion">{txt.motivosTitulo}</h2>
+    <PuertasContacto idioma={idioma} />
+  </Seccion>
+
+  {FORMULARIO_ACTIVO && <FormularioContacto idioma={idioma} />}
+</Base>

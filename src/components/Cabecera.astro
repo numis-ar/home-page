@@ -2,19 +2,22 @@
 /**
  * Cabecera: logo on the left, links + one button on the right. Sits inside a
  * .contenedor on green. Below 880px the links hide and only the primary button stays.
- * Mirrors components/navegacion/Cabecera.d.ts.
+ * Mirrors components/navegacion/Cabecera.d.ts. `logoAlt` and `navAria` follow
+ * the page language.
  */
 import Logo from "./Logo.astro";
 
 interface Props {
   logoSrc?: string;
+  logoAlt?: string;
+  navAria?: string;
   class?: string;
 }
 
-const { logoSrc, class: className } = Astro.props;
+const { logoSrc, logoAlt, navAria = "Principal", class: className } = Astro.props;
 ---
 
 <header class:list={["cabecera", className]}>
-  <Logo src={logoSrc} />
-  <nav class="nav" aria-label="Principal"><slot /></nav>
+  <Logo src={logoSrc} alt={logoAlt} />
+  <nav class="nav" aria-label={navAria}><slot /></nav>
 </header>

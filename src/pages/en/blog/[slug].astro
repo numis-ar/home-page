@@ -1,0 +1,16 @@
+---
+import NotaBlog from "../../../components/paginas/NotaBlog.astro";
+import { notasVisibles } from "../../../data/blog";
+
+export async function getStaticPaths() {
+  return (await notasVisibles("en")).map((nota) => ({ params: { slug: nota.id }, props: { nota } }));
+}
+
+interface Props {
+  nota: import("../../../data/blog").NotaEntrada;
+}
+
+const { nota } = Astro.props;
+---
+
+<NotaBlog nota={nota} idioma="en" />

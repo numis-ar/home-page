@@ -2,17 +2,21 @@
 /**
  * Campo: label + control + help. `htmlFor` must match the control's id.
  * Mark optional fields, not required ones. Mirrors components/formulario/Campo.d.ts.
+ * The "optional" marker follows the page language.
  */
+import { t, type Idioma } from "../data/i18n";
+
 interface Props {
   etiqueta?: string;
   /** One line under the control. Never repeat the label here. */
   ayuda?: string;
   opcional?: boolean;
   htmlFor?: string;
+  idioma?: Idioma;
   class?: string;
 }
 
-const { etiqueta, ayuda, opcional = false, htmlFor, class: className } = Astro.props;
+const { etiqueta, ayuda, opcional = false, htmlFor, idioma = "es", class: className } = Astro.props;
 ---
 
 <div class:list={["campo", className]}>
@@ -20,7 +24,7 @@ const { etiqueta, ayuda, opcional = false, htmlFor, class: className } = Astro.p
     etiqueta && (
       <label class="campo__etiqueta" for={htmlFor}>
         {etiqueta}
-        {opcional && <span class="campo__opcional"> · opcional</span>}
+        {opcional && <span class="campo__opcional"> · {t(idioma).formulario.opcional}</span>}
       </label>
     )
   }

@@ -1,0 +1,64 @@
+---
+/**
+ * Blog listing, shared by the three locales: every visible note of the page
+ * language's `blog` collection, newest first. Typography only, no images:
+ * date, title linking to the note, lead and byline, with the system's
+ * perforation between notes. With no published note the page still builds and
+ * says so in one sentence: an empty blog is a valid state, not missing data.
+ * It is not linked from the header or footer until a note is published (see
+ * `navegacion` in src/data/sitio.ts).
+ */
+import Base from "../../layouts/Base.astro";
+import Autores from "../../components/Autores.astro";
+import Contenedor from "../../components/Contenedor.astro";
+import Hero from "../../components/Hero.astro";
+import Seccion from "../../components/Seccion.astro";
+import { autoresDe, fechaISO, fechaLarga, notasVisibles, rutaNota } from "../../data/blog";
+import { t, type Idioma } from "../../data/i18n";
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const txt = t(idioma).blog;
+
+const notas = await Promise.all(
+  (await notasVisibles(idioma)).map(async (nota) => ({ nota, autores: await autoresDe(nota) })),
+);
+---
+
+<Base title={txt.paginaTitulo} description={txt.descripcion} idioma={idioma}>
+  <Contenedor>
+    <Hero>
+      <div>
+        <h1 class="display">{txt.titulo}</h1>
+        <p class="lead">{txt.bajada}</p>
+      </div>
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="papel" aria-label={txt.ariaLista}>
+    {
+      notas.length > 0 ? (
+        <ol class="notas">
+          {notas.map(({ nota, autores }) => (
+            <li class="nota">
+              <p class="nota__fecha">
+                <time datetime={fechaISO(nota.data.fecha)}>{fechaLarga(nota.data.fecha, idioma)}</time>
+                {!nota.data.publicado && ` · ${t(idioma).blog.borrador}`}
+              </p>
+              <h2 class="nota__titulo">
+                <a href={rutaNota(nota, idioma)}>{nota.data.titulo}</a>
+              </h2>
+              <p class="nota__bajada">{nota.data.bajada}</p>
+              <Autores autores={autores} idioma={idioma} class="nota__autores" />
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p class="texto">{txt.vacio}</p>
+      )
+    }
+  </Seccion>
+</Base>

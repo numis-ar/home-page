@@ -4,18 +4,20 @@
  * Without `valor` the value is drawn as <Pendiente />. Mirrors Ticket.d.ts.
  */
 import Pendiente from "./Pendiente.astro";
+import type { Idioma } from "../data/i18n";
 
 export interface Props {
   concepto: string;
   /** Missing value: rendered as a pending mark, never as an empty line. */
   valor?: string;
   total?: boolean;
+  idioma?: Idioma;
 }
 
-const { concepto, valor, total = false } = Astro.props;
+const { concepto, valor, total = false, idioma = "es" } = Astro.props;
 ---
 
 <div class:list={["renglon", total && "renglon--total"]}>
   <dt>{concepto}</dt>
-  <dd>{valor ?? <Pendiente />}</dd>
+  <dd>{valor ?? <Pendiente idioma={idioma} />}</dd>
 </div>

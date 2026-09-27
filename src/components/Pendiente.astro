@@ -2,13 +2,17 @@
 /**
  * Pendiente: marks missing data (yellow background, dashed orange outline) so it
  * can never be published by mistake. The slot says what is missing; it defaults
- * to "a completar". Mirrors `Pendiente` in components/ticket/Ticket.d.ts.
+ * to the "to be filled in" text of the page's language. Mirrors `Pendiente` in
+ * components/ticket/Ticket.d.ts.
  */
+import { t, type Idioma } from "../data/i18n";
+
 interface Props {
+  idioma?: Idioma;
   class?: string;
 }
 
-const { class: className } = Astro.props;
+const { idioma = "es", class: className } = Astro.props;
 ---
 
-<span class:list={["pendiente", className]}><slot>a completar</slot></span>
+<span class:list={["pendiente", className]}><slot>{t(idioma).pendiente}</slot></span>

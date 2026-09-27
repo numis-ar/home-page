@@ -4,7 +4,10 @@
  * hard border and shadow (like <Puerta>), alternating white and mint inside
  * the `.equipo-grilla` grid. Optional data is omitted when absent: no bio, no links, no
  * photo placeholder. A photo, when there is one, must be a real one.
+ * The photo alt text follows the page language.
  */
+import { t, type Idioma } from "../data/i18n";
+
 interface Props {
   /** Anchor id (the member's slug), so notes can link to /nosotros#<slug>. */
   id?: string;
@@ -13,16 +16,17 @@ interface Props {
   bio?: string;
   foto?: string;
   enlaces?: { texto: string; href: string }[];
+  idioma?: Idioma;
   class?: string;
 }
 
-const { id, nombre, especialidad, bio, foto, enlaces = [], class: className } = Astro.props;
+const { id, nombre, especialidad, bio, foto, enlaces = [], idioma = "es", class: className } = Astro.props;
 // Capitalize for a standalone line; the collection keeps the lowercase ticket form.
 const area = especialidad.charAt(0).toUpperCase() + especialidad.slice(1);
 ---
 
 <article id={id} class:list={["integrante", className]}>
-  {foto && <img class="integrante__foto" src={foto} alt={`Foto de ${nombre}`} loading="lazy" />}
+  {foto && <img class="integrante__foto" src={foto} alt={`${t(idioma).nosotros.fotoDe} ${nombre}`} loading="lazy" />}
   <h3>{nombre}</h3>
   <p class="integrante__area">{area}</p>
   {bio && <p>{bio}</p>}

@@ -1,0 +1,78 @@
+---
+/**
+ * DRAFT pending legal review by Numis. Do not treat this text as final.
+ *
+ * Privacy page, shared by the three locales. Every statement describes what
+ * the site actually does; keep it in sync with the code:
+ * - The contact form is off (FORMULARIO_ACTIVO is false in src/data/sitio.ts):
+ *   the only contact route is writing to hola@numis.ar, and the "When you
+ *   write to us" section says so. When the form comes back
+ *   (FORMULARIO_ACTIVO true, src/components/FormularioContacto.astro), rewrite
+ *   that section to describe it: what it collects and where it goes (mail
+ *   client via mailto: while ENDPOINT_FORMULARIO is undefined, or the backend
+ *   once it exists).
+ * - Base.astro and src/styles load nothing from third parties: the font and
+ *   logos are served from public/, and there are no cookies, analytics or
+ *   trackers. Adding any of those requires updating this page.
+ * - Pending mark below: the legal address. Email retention and hosting logs
+ *   are stated generically on purpose (owner's decision, 2026-09-11); name
+ *   the provider here if it ever matters.
+ * - The last paragraph is the control authority notice required by
+ *   Disposición DNPDP 10/2008, updated to the AAIP. Numis's lawyer must
+ *   confirm the wording of each language before launch.
+ */
+import Base from "../../layouts/Base.astro";
+import Contenedor from "../../components/Contenedor.astro";
+import Hero from "../../components/Hero.astro";
+import Pendiente from "../../components/Pendiente.astro";
+import Seccion from "../../components/Seccion.astro";
+import { t, type Idioma } from "../../data/i18n";
+import { CORREO, mailto, RAZON_SOCIAL } from "../../data/sitio";
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const txt = t(idioma).privacidad;
+const asunto = t(idioma).correo.datosPersonales;
+---
+
+<Base title={txt.titulo} description={`${txt.lead} ${txt.descripcionSufijo}`} idioma={idioma}>
+  <Contenedor>
+    <Hero>
+      <div>
+        <h1 class="display">{txt.h1}</h1>
+        <p class="lead">{txt.lead}</p>
+      </div>
+    </Hero>
+  </Contenedor>
+
+  <Seccion fondo="papel" class="privacidad">
+    <p class="secundario">{txt.actualizado}</p>
+
+    <h2 class="titulo-seccion">{txt.responsableTitulo}</h2>
+    <p class="texto">
+      {txt.responsableAntes}{RAZON_SOCIAL}, con domicilio en <Pendiente idioma={idioma}>{txt.responsablePendiente}</Pendiente>
+      {txt.responsableMedio}<a class="enlace" href={mailto(asunto)}>{CORREO}</a>{txt.responsableDespues}
+    </p>
+
+    <h2 class="titulo-seccion">{txt.escribisTitulo}</h2>
+    <p class="texto">
+      {txt.escribisTexto1Antes}<a class="enlace" href={mailto()}>{CORREO}</a>{txt.escribisTexto1Despues}
+    </p>
+    <p class="texto">{txt.escribisTexto2}</p>
+
+    <h2 class="titulo-seccion">{txt.cookiesTitulo}</h2>
+    <p class="texto">{txt.cookiesTexto1}</p>
+    <p class="texto">{txt.cookiesTexto2}</p>
+
+    <h2 class="titulo-seccion">{txt.derechosTitulo}</h2>
+    <p class="texto">
+      {txt.derechosTexto1Antes}<a class="enlace" href={mailto(asunto)}>{CORREO}</a>{txt.derechosTexto1Despues}
+    </p>
+    <p class="texto">{txt.derechosTexto2}</p>
+    <p class="texto">{txt.derechosTexto3}</p>
+    <p class="texto">{txt.derechosTexto4}</p>
+  </Seccion>
+</Base>

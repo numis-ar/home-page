@@ -1,18 +1,19 @@
 ---
 /**
- * FormularioContacto: the "Escribinos" section of /contacto (#escribinos), with
- * its two scripts. Rendered only while FORMULARIO_ACTIVO is true in
- * src/data/sitio.ts; when it is not rendered, Astro does not ship its scripts.
+ * FormularioContacto: the "Write to us" section of /contacto (#escribinos), with
+ * its two scripts, in the page's language. Rendered only while
+ * FORMULARIO_ACTIVO is true in src/data/sitio.ts; when it is not rendered,
+ * Astro does not ship its scripts.
  *
  * While ENDPOINT_FORMULARIO is undefined the form targets mailto: (native
  * fallback without JS); the first script turns the fields into a readable
  * email in the visitor's mail client. Once a real endpoint exists, set
  * ENDPOINT_FORMULARIO and the form posts to it, and update /privacidad.
  *
- * The "Motivo" select starts on a disabled, empty placeholder and is required,
+ * The "Reason" select starts on a disabled, empty placeholder and is required,
  * so nobody sends a reason they did not pick. The contact doors (and
  * /contacto?motivo=<valor>) preselect a reason; the email subject is
- * "Consulta desde numis.ar: <reason>".
+ * "<ASUNTO_CONSULTA>: <reason>".
  */
 import Acciones from "./Acciones.astro";
 import Area from "./Area.astro";
@@ -24,53 +25,61 @@ import Par from "./Par.astro";
 import Seccion from "./Seccion.astro";
 import Seleccion from "./Seleccion.astro";
 import Texto from "./Texto.astro";
-import { CORREO, ENDPOINT_FORMULARIO, enlacePrivacidad, mailto, MOTIVOS } from "../data/sitio";
+import { t, type Idioma } from "../data/i18n";
+import { ASUNTO_CONSULTA, CORREO, ENDPOINT_FORMULARIO, enlacePrivacidad, mailto, MOTIVOS } from "../data/sitio";
+
+interface Props {
+  idioma?: Idioma;
+}
+
+const { idioma = "es" } = Astro.props;
+const txt = t(idioma).formulario;
 
 const accion = ENDPOINT_FORMULARIO ?? mailto();
 const porCorreo = ENDPOINT_FORMULARIO === undefined;
 
 const motivos = [
-  { valor: "", texto: "Elegí un motivo", deshabilitada: true, seleccionada: true },
-  ...MOTIVOS.map((m) => ({ valor: m.valor, texto: m.texto })),
+  { valor: "", texto: txt.motivoPlaceholder, deshabilitada: true, seleccionada: true },
+  ...MOTIVOS(idioma).map((m) => ({ valor: m.valor, texto: m.texto })),
 ];
+const privacidad = enlacePrivacidad(idioma);
 ---
 
 <Seccion fondo="papel" id="escribinos">
   <Par textoAngosto>
     <div>
-      <h2 class="titulo-seccion">Escribinos</h2>
-      <p class="secundario texto-angosto">
-        Decinos quién sos y qué necesitás. Te respondemos al correo que dejes.
-      </p>
+      <h2 class="titulo-seccion">{txt.titulo}</h2>
+      <p class="secundario texto-angosto">{txt.bajada}</p>
     </div>
     <Formulario
       method="post"
       action={accion}
       enctype={porCorreo ? "text/plain" : undefined}
       data-formulario-contacto={porCorreo ? "correo" : undefined}
+      data-asunto={ASUNTO_CONSULTA(idioma)}
     >
       <Fila>
-        <Campo etiqueta="Nombre" htmlFor="con-nombre">
-          <Texto id="con-nombre" name="nombre" placeholder="Cómo te llamás" required />
+        <Campo etiqueta={txt.nombre} htmlFor="con-nombre">
+          <Texto id="con-nombre" name="nombre" placeholder={txt.nombrePlaceholder} required />
         </Campo>
-        <Campo etiqueta="Correo" htmlFor="con-mail">
+        <Campo etiqueta={txt.correo} htmlFor="con-mail">
           <Texto id="con-mail" name="correo" tipo="email" placeholder="vos@ejemplo.ar" required />
         </Campo>
       </Fila>
-      <Campo etiqueta="Organización" opcional htmlFor="con-org">
-        <Texto id="con-org" name="organizacion" placeholder="Organización, empresa u organismo" />
+      <Campo etiqueta={txt.organizacion} opcional htmlFor="con-org">
+        <Texto id="con-org" name="organizacion" placeholder={txt.organizacionPlaceholder} />
       </Campo>
-      <Campo etiqueta="Motivo" htmlFor="con-tipo">
+      <Campo etiqueta={txt.motivo} htmlFor="con-tipo">
         <Seleccion id="con-tipo" name="motivo" opciones={motivos} required />
       </Campo>
-      <Campo etiqueta="Mensaje" htmlFor="con-mensaje" ayuda="Un par de oraciones alcanzan.">
-        <Area id="con-mensaje" name="mensaje" placeholder="Qué necesitás y para cuándo." />
+      <Campo etiqueta={txt.mensaje} htmlFor="con-mensaje" ayuda={txt.mensajeAyuda}>
+        <Area id="con-mensaje" name="mensaje" placeholder={txt.mensajePlaceholder} />
       </Campo>
       <div class="formulario__envio">
-        <Acciones><Boton type="submit">{porCorreo ? "Preparar el correo" : "Enviar mi mensaje"}</Boton></Acciones>
+        <Acciones><Boton type="submit">{porCorreo ? txt.enviarCorreo : txt.enviar}</Boton></Acciones>
         <span class="formulario__nota">
-          {porCorreo && "Se abre tu programa de correo con el mensaje armado. "}O escribinos directo a <a class="enlace" href={mailto()}>{CORREO}</a>.{" "}
-          <a class="enlace" href={enlacePrivacidad.href}>Leé cómo tratamos tus datos</a>.
+          {porCorreo && txt.notaCorreo}{txt.notaDirecto}<a class="enlace" href={mailto()}>{CORREO}</a>.{" "}
+          <a class="enlace" href={privacidad.href}>{txt.notaPrivacidad}</a>.
         </span>
       </div>
     </Formulario>
@@ -86,25 +95,25 @@ const motivos = [
   }
 </script>
 
-<script>
+<script is:inline define:vars={{ script: txt.script }}>
   // mailto: fallback while there is no backend. The browser has already run
-  // the native `required`/`type=email` validation when "submit" fires.
-  import { ASUNTO_CONSULTA } from "../data/sitio";
-
-  const formulario = document.querySelector<HTMLFormElement>('[data-formulario-contacto="correo"]');
+  // the native `required`/`type=email` validation when "submit" fires. The
+  // field labels come from the page language via define:vars.
+  const formulario = document.querySelector('[data-formulario-contacto="correo"]');
 
   formulario?.addEventListener("submit", (evento) => {
     evento.preventDefault();
     const destino = formulario.getAttribute("action") ?? "";
-    const campo = (nombre: string) => String(new FormData(formulario).get(nombre) ?? "").trim();
-    const motivo = formulario.querySelector<HTMLSelectElement>("select[name=motivo]");
-    const asunto = `${ASUNTO_CONSULTA}: ${motivo?.selectedOptions[0]?.text ?? ""}`;
+    const asuntoPrefijo = formulario.getAttribute("data-asunto") ?? "";
+    const campo = (nombre) => String(new FormData(formulario).get(nombre) ?? "").trim();
+    const motivo = formulario.querySelector("select[name=motivo]");
+    const asunto = `${asuntoPrefijo}: ${motivo?.selectedOptions[0]?.text ?? ""}`;
     const organizacion = campo("organizacion");
 
     const cuerpo = [
-      `Nombre: ${campo("nombre")}`,
-      `Correo: ${campo("correo")}`,
-      ...(organizacion ? [`Organización: ${organizacion}`] : []),
+      `${script.nombre}: ${campo("nombre")}`,
+      `${script.correo}: ${campo("correo")}`,
+      ...(organizacion ? [`${script.organizacion}: ${organizacion}`] : []),
       "",
       campo("mensaje"),
     ].join("\n");

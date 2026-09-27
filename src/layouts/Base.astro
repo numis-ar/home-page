@@ -1,27 +1,42 @@
 ---
 /**
- * Base layout shared by every page: Spanish document, metadata (canonical,
- * Open Graph, Twitter card, Organization JSON-LD), favicon, font preload, the
- * single Numis stylesheet and the site chrome (header, <main> and footer).
- * Pages only pass what differs: title, description and, optionally, the
- * header's primary button. While a note is published, the header and footer
- * link to /blog and the head advertises the RSS feed (/blog/rss.xml). Every URL is absolute against `site`
- * (https://www.numis.ar, see astro.config.mjs).
+ * Base layout shared by every page: document in the page's language, metadata
+ * (canonical, Open Graph, Twitter card, Organization JSON-LD), favicon, font
+ * preload, the single Numis stylesheet and the site chrome (header, <main>
+ * and footer). Pages only pass what differs: title, description and,
+ * optionally, the header's primary button.
+ *
+ * i18n: every page renders in Spanish (default, URLs at the root), English
+ * (/en) and Portuguese (/pt). `idioma` selects the language; the header and
+ * footer links, the RSS advert and the language switcher all follow it. The
+ * head advertises the other languages of the same page (hreflang): by default
+ * it assumes the page exists in all three locales (true for the static
+ * routes); dynamic pages (notes, projects) pass `alternativas` with only the
+ * languages where the entry actually exists. Every URL is absolute against
+ * `site` (https://www.numis.ar, see astro.config.mjs).
  */
 import "../styles/numis.css";
 import Boton from "../components/Boton.astro";
 import Cabecera from "../components/Cabecera.astro";
 import Contenedor from "../components/Contenedor.astro";
 import Pie from "../components/Pie.astro";
-import { BLOG_TITULO, notasVisibles, RUTA_RSS } from "../data/blog";
+import { notasVisibles, RUTA_RSS } from "../data/blog";
 import { proyectosPublicados } from "../data/proyectos";
+import {
+  IDIOMAS,
+  nombreIdioma,
+  rutaEnIdioma,
+  etiquetaOG,
+  t,
+  conLocale,
+  type Idioma,
+} from "../data/i18n";
 import {
   accionPrincipal,
   CORREO,
   datosPie,
   enlaceBlog,
   enlacePrivacidad,
-  LEGAL,
   navegacion,
   RAZON_SOCIAL,
   type Enlace,
@@ -30,19 +45,34 @@ import {
 interface Props {
   title: string;
   description: string;
-  /** Primary button of the header. Defaults to Escribinos -> /contacto. */
+  /** Page language. Defaults to Spanish. */
+  idioma?: Idioma;
+  /** The page's URLs in the languages where this exact content exists (notes, projects). */
+  alternativas?: { idioma: Idioma; href: string }[];
+  /** Primary button of the header. Defaults to Escribinos -> /contacto of the language. */
   accion?: Enlace;
 }
 
-const { title, description, accion = accionPrincipal } = Astro.props;
+const { title, description, idioma = "es", alternativas, accion = accionPrincipal(idioma) } = Astro.props;
+const txt = t(idioma);
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const inicio = new URL("/", Astro.site);
 const ogImagen = new URL("/og.png", Astro.site);
-const hayNotas = (await notasVisibles()).length > 0;
-const enlaces = navegacion({ hayProyectos: (await proyectosPublicados()).length > 0, hayNotas });
+const hayNotas = (await notasVisibles(idioma)).length > 0;
+const enlaces = navegacion(
+  { hayProyectos: (await proyectosPublicados(idioma)).length > 0, hayNotas },
+  idioma,
+);
+
+// hreflang + switcher: explicit alternatives when given, else this same path
+// in every locale (static routes exist in all three).
+const locales = alternativas ?? IDIOMAS.map((i) => ({ idioma: i, href: rutaEnIdioma(Astro.url.pathname, i) }));
+const urlDe = (href: string) => new URL(href, Astro.site).href;
+const enlaceBlogLocale = enlaceBlog(idioma);
+const enlacePrivacidadLocale = enlacePrivacidad(idioma);
 
 // Organization structured data: confirmed facts only, no sameAs (there are no
-// social profiles).
+// social profiles). Institutional data does not change with the language.
 const organizacion = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -56,7 +86,7 @@ const organizacion = {
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={idioma}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -65,10 +95,16 @@ const organizacion = {
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    {hayNotas && <link rel="alternate" type="application/rss+xml" title={BLOG_TITULO} href={new URL(RUTA_RSS, Astro.site)} />}
+    {
+      locales.map((l) => (
+        <link rel="alternate" hreflang={l.idioma} href={urlDe(l.href)} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={urlDe(rutaEnIdioma(Astro.url.pathname, "es"))} />
+    {hayNotas && <link rel="alternate" type="application/rss+xml" title={txt.blog.titulo} href={new URL(conLocale(idioma, RUTA_RSS), Astro.site)} />}
     <link rel="preload" href="/fonts/archivo-variable.woff2" as="font" type="font/woff2" crossorigin />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="es_AR" />
+    <meta property="og:locale" content={etiquetaOG[idioma]} />
     <meta property="og:site_name" content="Numis" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -85,7 +121,7 @@ const organizacion = {
   </head>
   <body>
     <Contenedor>
-      <Cabecera>
+      <Cabecera logoAlt={txt.cabecera.logoAlt} navAria={txt.cabecera.navAria}>
         {
           enlaces.map((e) => (
             <Boton variante="hueco" href={e.href}>
@@ -101,11 +137,24 @@ const organizacion = {
       <slot />
     </main>
 
-    <Pie datos={datosPie}>
-      {LEGAL}
+    <Pie datos={datosPie(idioma)} lema={txt.pie.lema} logoAlt={txt.cabecera.logoAlt}>
+      {txt.pie.legal}
       <span class="pie__enlaces">
-        {hayNotas && <a class="enlace pie__enlace" href={enlaceBlog.href}>{enlaceBlog.texto}</a>}
-        <a class="enlace pie__enlace" href={enlacePrivacidad.href}>{enlacePrivacidad.texto}</a>
+        {hayNotas && <a class="enlace pie__enlace" href={enlaceBlogLocale.href}>{enlaceBlogLocale.texto}</a>}
+        <a class="enlace pie__enlace" href={enlacePrivacidadLocale.href}>{enlacePrivacidadLocale.texto}</a>
+        <span class="pie__idiomas" role="group" aria-label={txt.pie.idiomasAria}>
+          {
+            locales.map((l) =>
+              l.idioma === idioma ? (
+                <span aria-current="true">{nombreIdioma[l.idioma]}</span>
+              ) : (
+                <a class="enlace" href={l.href} hreflang={l.idioma} lang={l.idioma}>
+                  {nombreIdioma[l.idioma]}
+                </a>
+              ),
+            )
+          }
+        </span>
       </span>
     </Pie>
   </body>

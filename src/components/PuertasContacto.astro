@@ -1,18 +1,26 @@
 ---
 /**
- * PuertasContacto: the three contact doors from src/data/sitio.ts. Each one
- * opens an email with its reason as the subject, or, while FORMULARIO_ACTIVO,
- * leads to the contact form with that reason preselected (see `enlacePuerta`).
+ * PuertasContacto: the three contact doors, translated per page language.
+ * Each one opens an email with its reason as the subject, or, while
+ * FORMULARIO_ACTIVO, leads to the contact form with that reason preselected
+ * (see `enlacePuerta`).
  */
 import Puerta from "./Puerta.astro";
 import Puertas from "./Puertas.astro";
 import { enlacePuerta, puertas } from "../data/sitio";
+import type { Idioma } from "../data/i18n";
+
+interface Props {
+  idioma?: Idioma;
+}
+
+const { idioma = "es" } = Astro.props;
 ---
 
 <Puertas>
   {
-    puertas.map((p) => (
-      <Puerta href={enlacePuerta(p.motivo)} titulo={p.titulo}>
+    puertas(idioma).map((p) => (
+      <Puerta href={enlacePuerta(p.motivo, idioma)} titulo={p.titulo}>
         {p.texto}
       </Puerta>
     ))

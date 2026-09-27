@@ -38,6 +38,14 @@
    cambia de alto y se ven igual. */
 .pie__enlace,.pie__dato dd a{display:inline-block;padding-block:var(--e-1);margin-block:calc(var(--e-1) * -1)}
 
+/* Selector de idioma del pie (Español · English · Português): va pegado a los
+   enlaces de la línea legal, con el idioma actual en tinta seca (sin enlace).
+   Mismo patrón táctil que .pie__enlace. */
+.pie__idiomas{margin-left:var(--e-3);white-space:nowrap}
+.pie__idiomas a,.pie__idiomas [aria-current="true"]{display:inline-block;margin-left:var(--e-2);padding-block:var(--e-1);margin-block:calc(var(--e-1) * -1)}
+.pie__idiomas a:first-child,.pie__idiomas [aria-current="true"]:first-child{margin-left:0}
+.pie__idiomas [aria-current="true"]{opacity:.75}
+
 
 /* Pie con tres datos: tres columnas en escritorio, sin una cuarta vacía. */
 @media (min-width:881px){.pie__datos:has(> :last-child:nth-child(3)){grid-template-columns:repeat(3,minmax(0,1fr))}}

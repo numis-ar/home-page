@@ -56,3 +56,8 @@ Solo imágenes reales: nada de bancos de imágenes ni ilustraciones. Una imagen 
 ---
 
 La línea punteada de arriba separa una parte de la nota de otra. Usala poco.
+
+## Traducciones
+
+El sitio es trilingüe: cada nota vive en `es/`, `en/` y `pt/` con el mismo nombre de archivo. Para traducir una nota, copiá el archivo a `en/` y `pt/` (mismo nombre) y traducí el frente y el cuerpo. La nota aparece en un idioma solo cuando su traducción existe ahí: no hay relleno ni versión alternativa.
+

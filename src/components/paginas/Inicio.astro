@@ -1,0 +1,169 @@
+---
+/**
+ * Home, shared by the three locales (src/pages/index.astro, en/index.astro and
+ * pt/index.astro pass their language). Structure follows
+ * templates/pagina-institucional/PaginaInstitucional.dc.html; copy lives in
+ * src/data/i18n.ts. The published projects and the team ticket read the
+ * collections of the page's language, so they appear in each locale only once
+ * translated.
+ */
+import Base from "../../layouts/Base.astro";
+import Boton from "../../components/Boton.astro";
+import CierreContacto from "../../components/CierreContacto.astro";
+import ConSello from "../../components/ConSello.astro";
+import Contenedor from "../../components/Contenedor.astro";
+import Hero from "../../components/Hero.astro";
+import Impresora from "../../components/Impresora.astro";
+import Obra from "../../components/Obra.astro";
+import Par from "../../components/Par.astro";
+import Paso from "../../components/Paso.astro";
+import Pasos from "../../components/Pasos.astro";
+import Proyectos from "../../components/Proyectos.astro";
+import Publico from "../../components/Publico.astro";
+import Publicos from "../../components/Publicos.astro";
+import Acciones from "../../components/Acciones.astro";
+import Seccion from "../../components/Seccion.astro";
+import Sello from "../../components/Sello.astro";
+import Ticket from "../../components/Ticket.astro";
+import { equipoOrdenado } from "../../data/equipo";
+import { proyectosPublicados, rutaProyecto } from "../../data/proyectos";
+import { conLocale, t, type Idioma } from "../../data/i18n";
+import { SEDE } from "../../data/sitio";
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const txt = t(idioma).inicio;
+
+// Published entries of the language's `proyectos` collection. With none
+// published the band is not rendered at all. A published entry missing its
+// logo or description shows it as pending, so fill those in before publishing.
+const proyectos = (await proyectosPublicados(idioma)).map((p) => ({
+  nombre: p.data.nombre,
+  tipo: p.data.tipo,
+  logo: p.data.logo,
+  descripcion: p.data.descripcion,
+  href: rutaProyecto(p, idioma),
+}));
+
+// From the language's `equipo` collection, also listed on /nosotros.
+const equipo = (await equipoOrdenado(idioma)).map((i) => ({ concepto: i.data.nombre, valor: i.data.especialidad }));
+---
+
+<Base title={txt.titulo} description={txt.descripcion} idioma={idioma}>
+  <Contenedor>
+    <Hero pantalla>
+      <div>
+        <h1 class="display">{txt.h1}</h1>
+        <p class="lead">{txt.descripcion}</p>
+        <Acciones>
+          <Boton href="#contacto">{txt.ctaProyecto}</Boton>
+          <Boton variante="hueco" href="#como">{txt.ctaComo}</Boton>
+        </Acciones>
+      </div>
+      <Impresora resumen={txt.impresoraResumen}>
+        <Ticket
+          encabezado={txt.ticketActual.encabezado}
+          bajada={txt.ticketActual.bajada}
+          renglones={[
+            { concepto: txt.ticketActual.comision, valor: txt.ticketActual.enCadaVenta },
+            { concepto: txt.ticketActual.compras, valor: txt.ticketActual.registradas },
+            { concepto: txt.ticketActual.reglas, valor: txt.ticketActual.noSeVen },
+            { concepto: txt.ticketActual.codigo, valor: txt.ticketActual.cerrado },
+          ]}
+          total={{ valor: txt.ticketActual.total }}
+          idioma={idioma}
+          barras
+        >
+          <Fragment slot="pie" set:html={txt.ticketActual.pie} />
+        </Ticket>
+      </Impresora>
+    </Hero>
+  </Contenedor>
+
+  {
+    proyectos.length > 0 && (
+      <Seccion class="seccion--banda" id="proyectos" aria-label={txt.proyectosAria}>
+        <Proyectos banda proyectos={proyectos} idioma={idioma} />
+      </Seccion>
+    )
+  }
+
+  <Seccion fondo="papel" id="por-que">
+    <Par>
+      <ConSello>
+        <Ticket
+          suelto
+          encabezado={txt.otraCuenta.encabezado}
+          bajada={txt.otraCuenta.bajada}
+          renglones={[
+            { concepto: txt.otraCuenta.quienCompra, valor: txt.otraCuenta.protege },
+            { concepto: txt.otraCuenta.quienVende, valor: txt.otraCuenta.declara },
+            { concepto: txt.otraCuenta.software, valor: txt.otraCuenta.libre },
+            { concepto: txt.otraCuenta.organizacion, valor: txt.otraCuenta.cooperativa },
+          ]}
+          total={{ valor: txt.otraCuenta.total }}
+          idioma={idioma}
+        />
+        <Sello />
+      </ConSello>
+      <div>
+        <h2 class="titulo">{txt.porQueTitulo}</h2>
+        <p class="texto">{txt.porQueTexto}</p>
+        <p class="texto">{txt.misionFrase}</p>
+        <p class="texto">{txt.vision}</p>
+      </div>
+    </Par>
+  </Seccion>
+
+  <Seccion fondo="hondo" id="como">
+    <h2 class="titulo-seccion">{txt.comoTitulo}</h2>
+    {/*
+      Steps started from the design system (components/estructura/estructura.card.html)
+      and were revised with Numis in the site copy review. Public copy names no
+      payment system on purpose: it only says "free software".
+    */}
+    <Pasos>
+      {txt.pasos.map((paso) => (
+        <Paso titulo={paso.titulo}>{paso.texto}</Paso>
+      ))}
+    </Pasos>
+  </Seccion>
+
+  <Seccion id="para-quien">
+    <h2 class="titulo-seccion">{txt.paraQuienTitulo}</h2>
+    <Publicos>
+      {txt.publicos.map((publico) => (
+        <Publico titulo={publico.titulo}>{publico.texto}</Publico>
+      ))}
+    </Publicos>
+  </Seccion>
+
+  <Seccion fondo="hondo" id="hacemos">
+    <h2 class="titulo-seccion">{txt.hacemosTitulo}</h2>
+    {
+      txt.obras.map((obra) => (
+        <Obra verbo={obra.verbo} nombre={obra.nombre}>
+          {obra.texto}
+        </Obra>
+      ))
+    }
+  </Seccion>
+
+  <Seccion id="equipo">
+    <Par textoAngosto>
+      <div>
+        <h2 class="titulo-seccion">{txt.equipoTitulo}</h2>
+        <p class="secundario texto-angosto">{txt.equipoBajada}</p>
+        <Acciones>
+          <Boton variante="hueco" href={conLocale(idioma, "/nosotros")}>{txt.equipoBoton}</Boton>
+        </Acciones>
+      </div>
+      <Ticket suelto nomina encabezado={txt.equipoTicketEncabezado} bajada={SEDE} renglones={equipo} idioma={idioma} />
+    </Par>
+  </Seccion>
+
+  <CierreContacto idioma={idioma} />
+</Base>

@@ -1,7 +1,12 @@
 // Shared site data. Copy started from the design system templates
 // (.claude/skills/numis-design/templates/pagina-institucional) and was then
 // revised with Numis in the site copy review.
+//
+// What does not translate lives here (legal names, email, switches, the
+// stable `motivo` keys). Everything that renders text takes an `idioma` and
+// reads it from src/data/i18n.ts, so each language is a complete site.
 import type { DatoPie } from "../components/Pie.astro";
+import { conLocale, t, type Idioma } from "./i18n";
 
 export const CORREO = "hola@numis.ar";
 
@@ -14,56 +19,54 @@ export const RAZON_SOCIAL = "Cooperativa de Trabajo Numis Limitada";
 export const RAZON_SOCIAL_CORTA = "Coop. de Trabajo Numis Ltda.";
 export const SEDE = "CABA, Argentina";
 /** Ticket values go in lowercase (receipt ink). Used on /nosotros. */
-export const FORMA = "cooperativa de trabajo";
-export const TECNOLOGIA = "software libre";
+export const FORMA: Record<Idioma, string> = {
+  es: "cooperativa de trabajo",
+  en: "worker cooperative",
+  pt: "cooperativa de trabalho",
+};
+export const TECNOLOGIA: Record<Idioma, string> = {
+  es: "software libre",
+  en: "free software",
+  pt: "software livre",
+};
 
 export const mailto = (asunto?: string): string =>
   asunto ? `mailto:${CORREO}?subject=${encodeURIComponent(asunto)}` : `mailto:${CORREO}`;
 
 /**
- * Institutional data listed in the footer of every page. The slogan is not a
- * column: Pie shows it under the logo.
+ * Institutional data listed in the footer of every page. The concepts
+ * translate, the values are the same facts in every language.
  */
-export const datosPie: DatoPie[] = [
-  { concepto: "Razón social", valor: RAZON_SOCIAL },
-  { concepto: "Sede", valor: SEDE },
-  { concepto: "Contacto", valor: CORREO, href: mailto() },
-];
+export const datosPie = (idioma: Idioma): DatoPie[] => {
+  const txt = t(idioma).pie.datos;
+  return [
+    { concepto: txt.razonSocial, valor: RAZON_SOCIAL },
+    { concepto: txt.sede, valor: SEDE },
+    { concepto: txt.contacto, valor: CORREO, href: mailto() },
+  ];
+};
 
-/** The cooperative was registered in 2025. */
-export const LEGAL = "© 2025 Numis. Hecho con software libre.";
+/** Blog listing of the given language, linked from the header and the footer while it has a published note. */
+export const enlaceBlog = (idioma: Idioma): Enlace => ({
+  texto: t(idioma).nav.blog,
+  href: conLocale(idioma, "/blog"),
+});
 
-/** Mission, one sentence for the whole site: the /nosotros "Misión" card. */
-export const MISION = "Que cada persona controle, con software libre, las herramientas con las que maneja su dinero.";
-
-/** The same mission as a full sentence, for the home "Por qué" section. */
-export const MISION_FRASE = `Nuestra misión es ${MISION.charAt(0).toLowerCase()}${MISION.slice(1)}`;
-
-/** Vision. Used in the home "Por qué" section and on /nosotros. */
-export const VISION =
-  "Las reglas son más justas cuando las pueden conocer y discutir quienes las usan. Para eso hay que poder ver cómo funcionan y proponer cambios. Si la vida cotidiana pasa por el software, ese software tiene que respetar la libertad de las personas.";
-
-/** Team intro. Home team section and /nosotros. */
-export const EQUIPO_BAJADA = "Las personas que hacen la cooperativa, cada una desde su especialidad.";
+type ClaveNav = "proyectos" | "blog" | "nosotros" | "hacemos" | "como";
 
 export interface Enlace {
   texto: string;
   href: string;
 }
 
-/** Blog listing, linked from the header and the footer while a note is published. */
-export const enlaceBlog: Enlace = { texto: "Blog", href: "/blog" };
-
-type ClaveNav = "proyectos" | "blog" | "nosotros" | "hacemos" | "como";
-
-/** Every candidate header link. Root-relative anchors work from any page (on the home they just scroll). */
-const ENLACES_NAV: Record<ClaveNav, Enlace> = {
-  proyectos: { texto: "Proyectos", href: "/#proyectos" },
-  blog: enlaceBlog,
-  nosotros: { texto: "Nosotros", href: "/nosotros" },
-  hacemos: { texto: "Qué hacemos", href: "/#hacemos" },
-  como: { texto: "Cómo funciona", href: "/#como" },
-};
+/** Every candidate header link, in the given language. Root-relative anchors work from any page (on the home they just scroll). */
+const enlacesNav = (idioma: Idioma): Record<ClaveNav, Enlace> => ({
+  proyectos: { texto: t(idioma).nav.proyectos, href: conLocale(idioma, "/#proyectos") },
+  blog: enlaceBlog(idioma),
+  nosotros: { texto: t(idioma).nav.nosotros, href: conLocale(idioma, "/nosotros") },
+  hacemos: { texto: t(idioma).nav.hacemos, href: conLocale(idioma, "/#hacemos") },
+  como: { texto: t(idioma).nav.como, href: conLocale(idioma, "/#como") },
+});
 
 /** The header has room for three links plus the primary button, no more. */
 export const MAX_NAV = 3;
@@ -87,70 +90,59 @@ const ORDEN_NAV: ClaveNav[] = ["proyectos", "blog", "hacemos", "como", "nosotros
  * whether a project and a note are published, so "Proyectos" and "Blog"
  * appear and disappear with their collections.
  */
-export const navegacion = ({ hayProyectos, hayNotas }: { hayProyectos: boolean; hayNotas: boolean }): Enlace[] => {
-  const aplica = (clave: ClaveNav) =>
-    clave === "proyectos" ? hayProyectos : clave === "blog" ? hayNotas : true;
+export const navegacion = ({ hayProyectos, hayNotas }: { hayProyectos: boolean; hayNotas: boolean }, idioma: Idioma): Enlace[] => {
+  const ENLACES_NAV = enlacesNav(idioma);
+  const aplica = (clave: ClaveNav) => (clave === "proyectos" ? hayProyectos : clave === "blog" ? hayNotas : true);
   const elegidas = PRIORIDAD_NAV.filter(aplica).slice(0, MAX_NAV);
   return ORDEN_NAV.filter((clave) => elegidas.includes(clave)).map((clave) => ENLACES_NAV[clave]);
 };
 
 /** Privacy page, linked from the footer (and from the contact form note, while the form is on). */
-export const enlacePrivacidad: Enlace = { texto: "Privacidad", href: "/privacidad" };
+export const enlacePrivacidad = (idioma: Idioma): Enlace => ({
+  texto: t(idioma).pie.privacidad,
+  href: conLocale(idioma, "/privacidad"),
+});
 
 /** Default primary button of the header. A page can override it through Base's `accion` prop. */
-export const accionPrincipal: Enlace = { texto: "Escribinos", href: "/contacto" };
+export const accionPrincipal = (idioma: Idioma): Enlace => ({
+  texto: t(idioma).accion.escribinos,
+  href: conLocale(idioma, "/contacto"),
+});
 
 /**
  * Reasons of the contact form's "Motivo" select (src/components/FormularioContacto.astro).
- * The option text is also the subject of the email: "Consulta desde numis.ar: <texto>".
- * The doors' `motivo` must be one of these `valor`s.
+ * The option text is also the subject of the email: "<Asunto>: <texto>".
+ * The doors' `motivo` must be one of these `valor`s; only the text translates.
  */
-export const MOTIVOS = [
-  { valor: "implementacion", texto: "Implementar pagos en mi organización" },
-  { valor: "capacitacion", texto: "Capacitar a mi equipo" },
-  { valor: "investigacion", texto: "Investigar con Numis" },
-  { valor: "prensa", texto: "Consulta de prensa" },
-  { valor: "colaborar", texto: "Colaborar o asociarme" },
-  { valor: "otro", texto: "Otra consulta" },
-] as const;
+export type Motivo = "implementacion" | "capacitacion" | "investigacion" | "prensa" | "colaborar" | "otro";
 
-export type Motivo = (typeof MOTIVOS)[number]["valor"];
+export const MOTIVOS = (idioma: Idioma): { valor: Motivo; texto: string }[] =>
+  (Object.keys(t(idioma).correo.motivos) as Motivo[]).map((valor) => ({
+    valor,
+    texto: t(idioma).correo.motivos[valor],
+  }));
 
 /** Subject prefix of every contact email, from the form or from a door. */
-export const ASUNTO_CONSULTA = "Consulta desde numis.ar";
+export const ASUNTO_CONSULTA = (idioma: Idioma): string => t(idioma).correo.asuntoConsulta;
 
 /** Subject for a reason: "Consulta desde numis.ar: Capacitar a mi equipo". */
-export const asuntoConsulta = (motivo: Motivo): string =>
-  `${ASUNTO_CONSULTA}: ${MOTIVOS.find((m) => m.valor === motivo)?.texto ?? ""}`;
+export const asuntoConsulta = (motivo: Motivo, idioma: Idioma): string =>
+  `${ASUNTO_CONSULTA(idioma)}: ${MOTIVOS(idioma).find((m) => m.valor === motivo)?.texto ?? ""}`;
 
 /**
- * Contact doors, shared by the home closing section and the contact page. Each
- * door opens an email with its reason as the subject (see `enlacePuerta`).
+ * Contact doors, shared by the home closing section and the contact page, in
+ * the given language. Each door opens an email with its reason as the subject
+ * (see `enlacePuerta`).
  */
-export const puertas: { titulo: string; texto: string; motivo: Motivo }[] = [
-  {
-    titulo: "Represento a una organización",
-    texto: "Quiero implementar pagos con software libre.",
-    motivo: "implementacion",
-  },
-  {
-    titulo: "Busco capacitación",
-    texto: "Para mi equipo, organización u organismo.",
-    motivo: "capacitacion",
-  },
-  {
-    titulo: "Quiero colaborar",
-    texto: "Investigo, programo o trabajo en finanzas y me interesa sumarme.",
-    motivo: "colaborar",
-  },
-];
+export const puertas = (idioma: Idioma): { titulo: string; texto: string; motivo: Motivo }[] =>
+  t(idioma).contacto.puertas.map((p) => ({ titulo: p.titulo, texto: p.texto, motivo: p.motivo }));
 
 /**
  * Link to the contact form with a reason preselected. Only valid while
  * FORMULARIO_ACTIVO is true (the #escribinos section exists only then).
  */
-export const enlaceFormulario = (motivo: Motivo): string =>
-  `/contacto?motivo=${encodeURIComponent(motivo)}#escribinos`;
+export const enlaceFormulario = (motivo: Motivo, idioma: Idioma): string =>
+  conLocale(idioma, `/contacto?motivo=${encodeURIComponent(motivo)}#escribinos`);
 
 /**
  * Contact form switch. The form is off until there is a backend: a mailto-only
@@ -170,5 +162,5 @@ export const FORMULARIO_ACTIVO: boolean = false;
 export const ENDPOINT_FORMULARIO: string | undefined = undefined;
 
 /** Where a contact door leads: the form with its reason, or an email with it as the subject. */
-export const enlacePuerta = (motivo: Motivo): string =>
-  FORMULARIO_ACTIVO ? enlaceFormulario(motivo) : mailto(asuntoConsulta(motivo));
+export const enlacePuerta = (motivo: Motivo, idioma: Idioma): string =>
+  FORMULARIO_ACTIVO ? enlaceFormulario(motivo, idioma) : mailto(asuntoConsulta(motivo, idioma));

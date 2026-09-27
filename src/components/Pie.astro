@@ -15,12 +15,13 @@ export interface DatoPie {
 
 interface Props {
   logoSrc?: string;
+  logoAlt?: string;
   lema?: string;
   datos?: DatoPie[];
   class?: string;
 }
 
-const { logoSrc, lema = "finanzas para todas las personas", datos = [], class: className } = Astro.props;
+const { logoSrc, logoAlt, lema = "finanzas para todas las personas", datos = [], class: className } = Astro.props;
 const conDatos = datos.length > 0;
 ---
 
@@ -39,7 +40,7 @@ const conDatos = datos.length > 0;
       )
     }
     <div class:list={[conDatos && "pie__cierre"]}>
-      <div><Logo src={logoSrc} /><span class="lema">{lema}</span></div>
+      <div><Logo src={logoSrc} alt={logoAlt} /><span class="lema">{lema}</span></div>
       <span><slot /></span>
     </div>
   </div>

@@ -4,10 +4,12 @@
  * rendered as <dl> so they read as concept/value pairs.
  * At most 6 lines plus the total; with more, it is not a ticket.
  * The footer can be passed as the `pie` prop or as a `pie` slot (for line breaks).
- * Mirrors components/ticket/Ticket.d.ts.
+ * Mirrors components/ticket/Ticket.d.ts. `idioma` translates the default
+ * "Total" of the closing line and the pending marks of missing values.
  */
 import type { HTMLAttributes } from "astro/types";
 import Renglon from "./Renglon.astro";
+import { t, type Idioma } from "../data/i18n";
 
 export interface RenglonDato {
   concepto: string;
@@ -22,7 +24,7 @@ interface Props extends HTMLAttributes<"div"> {
   bajada?: string;
   /** Up to 6 concept -> value pairs. */
   renglones?: RenglonDato[];
-  /** Closing line after the cut: the conclusion. Concept defaults to "Total". */
+  /** Closing line after the cut: the conclusion. Concept defaults to the language's "Total". */
   total?: { concepto?: string; valor: string };
   /** Ticket footer. The only place where a wink is allowed. */
   pie?: string;
@@ -36,6 +38,7 @@ interface Props extends HTMLAttributes<"div"> {
   nomina?: boolean;
   /** Institutional card variant (max 480px, green links). */
   ficha?: boolean;
+  idioma?: Idioma;
 }
 
 const {
@@ -49,6 +52,7 @@ const {
   inclinado = false,
   nomina = false,
   ficha = false,
+  idioma = "es",
   class: className,
   ...rest
 } = Astro.props;
@@ -79,7 +83,7 @@ const tienePie = Boolean(pie) || Astro.slots.has("pie");
     renglones.length > 0 && (
       <dl class="ticket__renglones">
         {renglones.map((r) => (
-          <Renglon concepto={r.concepto} valor={r.valor} />
+          <Renglon concepto={r.concepto} valor={r.valor} idioma={idioma} />
         ))}
       </dl>
     )
@@ -90,7 +94,7 @@ const tienePie = Boolean(pie) || Astro.slots.has("pie");
       <>
         <hr class="ticket__corte" />
         <dl>
-          <Renglon concepto={total.concepto ?? "Total"} valor={total.valor} total />
+          <Renglon concepto={total.concepto ?? t(idioma).ticket.total} valor={total.valor} total idioma={idioma} />
         </dl>
       </>
     )

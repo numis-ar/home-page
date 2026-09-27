@@ -1,0 +1,36 @@
+---
+/**
+ * Not found page, shared by the three locales. Astro builds the Spanish one
+ * as dist/404.html; the hosting must serve it for unknown URLs so visitors
+ * never see the host's generic (often English) page. The en/pt counterparts
+ * are reachable at /en/404/ and /pt/404/ but most static hosts only serve the
+ * root 404.html for unknown URLs.
+ */
+import Base from "../../layouts/Base.astro";
+import Acciones from "../../components/Acciones.astro";
+import Boton from "../../components/Boton.astro";
+import Contenedor from "../../components/Contenedor.astro";
+import Hero from "../../components/Hero.astro";
+import { conLocale, t, type Idioma } from "../../data/i18n";
+
+interface Props {
+  idioma: Idioma;
+}
+
+const { idioma } = Astro.props;
+const txt = t(idioma).noEncontrada;
+---
+
+<Base title={txt.titulo} description={txt.descripcion} idioma={idioma}>
+  <Contenedor>
+    <Hero>
+      <div>
+        <h1 class="display">{txt.h1}</h1>
+        <p class="lead">{txt.lead}</p>
+        <Acciones>
+          <Boton href={conLocale(idioma, "/")}>{txt.volver}</Boton>
+        </Acciones>
+      </div>
+    </Hero>
+  </Contenedor>
+</Base>

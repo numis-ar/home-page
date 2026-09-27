@@ -27,7 +27,7 @@
   --ih-base:1.5; /* @kind font */
 
   /* Medidas de línea */
-  --medida-lead:46ch; /* @kind other */
-  --medida-texto:52ch; /* @kind other */
-  --medida-angosta:36ch; /* @kind other */
+  /*--medida-lead:58ch;  @kind other */
+  /*--medida-texto:68ch;  @kind other */
+  /*--medida-angosta:44ch;  @kind other */
 }
