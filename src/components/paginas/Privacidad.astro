@@ -51,12 +51,6 @@ const asunto = t(idioma).correo.datosPersonales;
   <Seccion fondo="papel" class="privacidad">
     <p class="secundario">{txt.actualizado}</p>
 
-    <h2 class="titulo-seccion">{txt.responsableTitulo}</h2>
-    <p class="texto">
-      {txt.responsableAntes}{RAZON_SOCIAL}, con domicilio en <Pendiente idioma={idioma}>{txt.responsablePendiente}</Pendiente>
-      {txt.responsableMedio}<a class="enlace" href={mailto(asunto)}>{CORREO}</a>{txt.responsableDespues}
-    </p>
-
     <h2 class="titulo-seccion">{txt.escribisTitulo}</h2>
     <p class="texto">
       {txt.escribisTexto1Antes}<a class="enlace" href={mailto()}>{CORREO}</a>{txt.escribisTexto1Despues}
