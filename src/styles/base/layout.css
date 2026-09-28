@@ -40,6 +40,13 @@
   .hero:has(> :nth-child(2)):not(.hero--pantalla){min-height:clamp(28rem,62svh,40rem);align-items:center;padding-bottom:clamp(2rem,6vw,5rem)}
 }
 
+/* Héroes de una sola columna (blog, nota, privacidad, 404): sin columna
+   derecha, la grilla de dos columnas dejaba el texto en la primera (57% del
+   ancho) y un hueco verde a la derecha. Usan todo el ancho del contenido, y el
+   titular también (sin el tope de 18ch; text-wrap:balance empareja las líneas). */
+.hero:not(:has(> :nth-child(2))){grid-template-columns:1fr}
+.hero:not(:has(> :nth-child(2))) .display{max-width:none}
+
 /* Páginas de texto (/privacidad): títulos de sección más juntos al texto que
    los siguen, y separados del bloque anterior. */
 .privacidad .titulo-seccion{margin:var(--e-8) 0 var(--e-4)}
