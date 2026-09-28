@@ -4,7 +4,7 @@ fecha: 2026-09-28
 bajada: As rodoviárias não sabem a que horas sai seu ônibus e nenhuma empresa publica um dado ao vivo. Estamos construindo o anden, um app Android e um servidor em Rust, ambos software livre, que transformam os próprios passageiros no painel de chegadas que falta.
 autores:
   - sebastian-marchano
-publicado: false
+publicado: true
 ---
 São nove da noite em Retiro: 75 plataformas espalhadas em três pisos e até 100.000 pessoas por dia na alta temporada. Sua passagem diz "Plataforma 10 a 28". O painel não existe, ou não funciona, ou lista quarenta serviços que saem "aproximadamente" agora. Você embarca em um ônibus que faz Buenos Aires–Mendoza em treze horas, dorme por volta da meia-noite e nada — ninguém — te avisa que faltam vinte minutos para a sua parada.
 

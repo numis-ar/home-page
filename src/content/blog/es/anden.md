@@ -4,7 +4,7 @@ fecha: 2026-09-28
 bajada: Las terminales no saben a qué hora sale tu micro y ninguna empresa publica un dato en vivo. Estamos construyendo anden, una app Android y un servidor en Rust, ambos de software libre, que convierten a los propios pasajeros en el tablero de llegadas que falta.
 autores:
   - sebastian-marchano
-publicado: false
+publicado: true
 ---
 Son las nueve de la noche en Retiro: 75 andenes repartidos en tres pisos y hasta 100.000 personas por día en temporada. Tu pasaje dice "Andén 10 a 28". El tablero no existe, o no anda, o lista cuarenta servicios que salen "aproximadamente" ahora. Subís a un micro que hace Buenos Aires–Mendoza en trece horas, te dormís a la medianada y nada — nadie — te avisa que en veinte minutos bajás.
 

@@ -4,7 +4,7 @@ fecha: 2026-09-28
 bajada: Terminals don't know when your bus leaves and no company publishes a single live data point. We're building anden — an Android app and a Rust server, both free software — that turns passengers themselves into the arrival board that's missing.
 autores:
   - sebastian-marchano
-publicado: false
+publicado: true
 ---
 It's nine at night at Retiro: 75 gates spread over three levels and up to 100,000 people a day in peak season. Your ticket says "Gate 10 to 28". The departure board doesn't exist, or it doesn't work, or it lists forty services leaving "approximately" now. You board a bus that runs Buenos Aires–Mendoza in thirteen hours, fall asleep around midnight, and nothing — no one — tells you that your stop is twenty minutes away.
 
