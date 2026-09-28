@@ -79,9 +79,20 @@ const organizacion = {
   name: "Numis",
   legalName: RAZON_SOCIAL,
   url: inicio.href,
-  logo: new URL("/logo/numis-logo-sobre-verde.svg", Astro.site).href,
+  // Google does not accept SVG logos: a square PNG of at least 112px.
+  logo: new URL("/logo/numis-logo.png", Astro.site).href,
   email: CORREO,
   address: { "@type": "PostalAddress", addressLocality: "Ciudad Autónoma de Buenos Aires", addressCountry: "AR" },
+};
+
+// WebSite structured data: tells Google to show "Numis" as the site name in
+// results instead of the bare domain.
+const sitioWeb = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Numis",
+  alternateName: ["Cooperativa Numis", "numis.ar"],
+  url: inicio.href,
 };
 ---
 
@@ -94,6 +105,9 @@ const organizacion = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-48.png" sizes="48x48" type="image/png" />
+    <link rel="icon" href="/favicon-192.png" sizes="192x192" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     {
       locales.map((l) => (
@@ -118,6 +132,7 @@ const organizacion = {
     />
     <meta name="twitter:card" content="summary_large_image" />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(organizacion)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(sitioWeb)} />
   </head>
   <body>
     <Contenedor>

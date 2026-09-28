@@ -74,7 +74,7 @@ const tienePie = Boolean(pie) || Astro.slots.has("pie");
   {
     (encabezado || bajada) && (
       <div class="ticket__enc">
-        {encabezado && <strong>{encabezado}</strong>}
+        {encabezado && <strong>{encabezado}</strong>}{encabezado && bajada && " "}
         {bajada && <span>{bajada}</span>}
       </div>
     )

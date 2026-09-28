@@ -59,11 +59,11 @@ const equipo = (await equipoOrdenado(idioma)).map((i) => ({ concepto: i.data.nom
         <h1 class="display">{txt.h1}</h1>
         <p class="lead">{txt.descripcion}</p>
         <Acciones>
-          <Boton href="#contacto">{txt.ctaProyecto}</Boton>
+          <Boton href="#contacto">{txt.ctaProyecto}</Boton>{" "}
           <Boton variante="hueco" href="#como">{txt.ctaComo}</Boton>
         </Acciones>
       </div>
-      <Impresora resumen={txt.impresoraResumen}>
+      <Impresora resumen={txt.impresoraResumen} data-nosnippet>
         <Ticket
           encabezado={txt.ticketActual.encabezado}
           bajada={txt.ticketActual.bajada}

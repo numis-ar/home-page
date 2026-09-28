@@ -55,7 +55,8 @@ const es = {
   accion: { escribinos: "Escribinos" },
   inicio: {
     titulo: "Numis · Pagos con software libre",
-    descripcion: "Numis es una cooperativa de trabajo. Diseñamos e implementamos pagos con software libre.",
+    descripcion:
+      "Numis es una cooperativa de trabajo de Buenos Aires. Diseñamos e implementamos pagos con software libre: reglas a la vista y código que cualquiera puede revisar.",
     h1: "Pagos con reglas que se pueden ver.",
     ctaProyecto: "Contanos tu proyecto",
     ctaComo: "Ver cómo funciona",
@@ -308,7 +309,8 @@ export const ui: Record<Idioma, Textos> = {
     accion: { escribinos: "Write to us" },
     inicio: {
       titulo: "Numis · Payments with free software",
-      descripcion: "Numis is a worker cooperative. We design and implement payments with free software.",
+      descripcion:
+        "Numis is a worker cooperative from Buenos Aires. We design and implement payments with free software: rules you can see and code anyone can review.",
       h1: "Payments with rules you can see.",
       ctaProyecto: "Tell us about your project",
       ctaComo: "See how it works",
@@ -561,7 +563,8 @@ export const ui: Record<Idioma, Textos> = {
     accion: { escribinos: "Fale conosco" },
     inicio: {
       titulo: "Numis · Pagamentos com software livre",
-      descripcion: "Numis é uma cooperativa de trabalho. Projetamos e implementamos pagamentos com software livre.",
+      descripcion:
+        "Numis é uma cooperativa de trabalho de Buenos Aires. Projetamos e implementamos pagamentos com software livre: regras à vista e código que todos podem revisar.",
       h1: "Pagamentos com regras que se podem ver.",
       ctaProyecto: "Conte-nos o seu projeto",
       ctaComo: "Veja como funciona",
