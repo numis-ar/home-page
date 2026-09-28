@@ -74,4 +74,4 @@ Todo o trabalho pode ser seguido no repositório GIT do anden: [git.taler.net/an
 
 Se você viaja de ônibus de longa distância, já sabe do que estamos falando: daquelas noites na rodoviária olhando uma passagem que diz "10 a 28", e daquelas sonecas de 300 quilômetros com um olho aberto por se já estarmos chegando.
 
-O anden se constrói para essas viagens. Quando começar a prova na estrada, vamos procurar passageiros que queiram embarcar para prová-lo: [escreva para nós](/pt/contacto) e vamos juntos na viagem.
+O anden se constrói para essas viagens. Quando começar a prova na estrada, vamos procurar passageiros que queiram embarcar para prová-lo: [escreva para nós](/pt/contato) e vamos juntos na viagem.

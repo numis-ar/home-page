@@ -22,7 +22,7 @@ export const prefijo = (idioma: Idioma): string => (idioma === "es" ? "" : `/${i
 const RUTAS_TRADUCIDAS: Record<Idioma, Record<string, string>> = {
   es: {},
   en: { "/nosotros": "/about", "/contacto": "/contact", "/privacidad": "/privacy" },
-  pt: {},
+  pt: { "/nosotros": "/sobre", "/contacto": "/contato", "/privacidad": "/privacidade" },
 };
 
 /** Cambia el primer segmento de la ruta según la tabla; deja igual subrutas, ?consulta y #ancla. */
