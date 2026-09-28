@@ -1,0 +1,80 @@
+# Builds the site and deploys it to the cPanel host over FTP on every push to
+# main. Each deploy is a new folder under public_html/releases/ and goes live
+# by swapping the root .htaccess (see deploy/htaccess and deploy/ftp-deploy.sh).
+#
+# Rollback: Actions > Deploy > Run workflow, with the name of a release still
+# on the server (the "Live:" line of an earlier run). Only the switch runs.
+#
+# Secrets (environment "prod"): FTP_HOST, FTP_USER, FTP_PASSWORD. Optional variable: FTP_DIR
+# (default public_html, relative to the FTP user's home).
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      release:
+        description: "Release to switch back to (e.g. 20260928-153000-0ebe41f). Empty: build and deploy this commit."
+        required: false
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+    env:
+      FTP_HOST: ${{ secrets.FTP_HOST }}
+      FTP_USER: ${{ secrets.FTP_USER }}
+      FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+      FTP_DIR: ${{ vars.FTP_DIR || 'public_html' }}
+      ROLLBACK: ${{ inputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      - if: env.ROLLBACK == ''
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - if: env.ROLLBACK == ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - if: env.ROLLBACK == ''
+        run: pnpm install --frozen-lockfile
+
+      - if: env.ROLLBACK == ''
+        run: pnpm build
+
+      - name: Deploy
+        env:
+          BACKUP_DIR: ${{ runner.temp }}/backup
+        run: |
+          if [ -n "$ROLLBACK" ]; then
+            deploy/ftp-deploy.sh "$ROLLBACK"
+          else
+            deploy/ftp-deploy.sh "$(date -u +%Y%m%d-%H%M%S)-${GITHUB_SHA::7}" dist
+          fi
+
+      # What was on the server outside releases/ before this run (the first
+      # run: the whole pre-CI site). Download it from the run's summary page.
+      - name: Keep server backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-backup-${{ github.run_number }}
+          path: ${{ runner.temp }}/backup
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 90

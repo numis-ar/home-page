@@ -1,0 +1,66 @@
+# Apache (cPanel) settings for the document root. This is a template:
+# deploy/ftp-deploy.sh replaces __RELEASE__ with the active release and
+# uploads it as public_html/.htaccess. Swapping this one file (upload as
+# .htaccess.new, then rename) is the atomic switch between releases.
+#
+# Layout on the server:
+#   public_html/.htaccess              this file
+#   public_html/releases/<release>/    one full build of dist/ per deploy
+# Every URL is served from the active release; the /releases/ path itself is
+# never visible to visitors.
+
+DirectoryIndex index.html
+Options -Indexes
+
+# Astro builds /contacto as /contacto/index.html. Apache's own trailing-slash
+# redirect would expose /releases/<release>/contacto/, so it is off and the
+# rewrite below adds the slash instead.
+DirectorySlash Off
+
+# Unknown URLs get the site's own 404 page (src/pages/404.astro).
+ErrorDocument 404 /releases/__RELEASE__/404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # AutoSSL renews the certificate through public_html/.well-known/: leave it alone.
+  RewriteRule ^\.well-known/ - [END]
+
+  # One canonical origin: https://www.numis.ar (`site` in astro.config.mjs).
+  # X-Forwarded-Proto covers hosts where nginx terminates TLS in front of Apache;
+  # without it, %{HTTPS} is always "off" there and the redirect would loop.
+  # If the site is ever tested on a temporary domain, comment out the host rule.
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://www.numis.ar%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTP_HOST} !^www\.numis\.ar$ [NC]
+  RewriteRule ^ https://www.numis.ar%{REQUEST_URI} [L,R=301]
+
+  # Releases are only reachable through the rewrite below, never directly.
+  # (REDIRECT_STATUS is empty only for the visitor's own request, so the 404
+  # page itself, served from /releases/, still works.)
+  RewriteCond %{ENV:REDIRECT_STATUS} ^$
+  RewriteRule ^releases(/|$) - [R=404,L]
+
+  # A folder without its trailing slash: /contacto -> /contacto/
+  RewriteCond %{REQUEST_URI} !^/releases/
+  RewriteCond %{DOCUMENT_ROOT}/releases/__RELEASE__/$1 -d
+  RewriteRule ^(.*[^/])$ https://www.numis.ar/$1/ [R=301,L]
+
+  # Everything else comes from the active release.
+  RewriteCond %{REQUEST_URI} !^/releases/
+  RewriteRule ^(.*)$ releases/__RELEASE__/$1 [END]
+</IfModule>
+
+# Caching. Files under _astro/ have a content hash in their name, so they can
+# be cached forever; everything else is revalidated so a deploy shows at once.
+# REQUEST_URI is the rewritten path (/releases/<release>/...), hence no ^/ anchor.
+<IfModule mod_headers.c>
+  Header set Cache-Control "no-cache"
+  <If "%{REQUEST_URI} =~ m#^/releases/[^/]+/_astro/#">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+  <If "%{REQUEST_URI} =~ m#^/releases/[^/]+/fonts/#">
+    Header set Cache-Control "public, max-age=2592000"
+  </If>
+</IfModule>

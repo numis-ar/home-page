@@ -85,18 +85,46 @@ npm run check    # astro check (type and template diagnostics)
 
 ## Deploy (cPanel / Apache)
 
-The build is plain static files.
+Every push to `main` builds the site and uploads it over FTP
+(`.github/workflows/deploy.yml`, which runs `deploy/ftp-deploy.sh`). Each
+deploy is a new folder, and switching to it is a single file rename:
 
-1. `npm run build`.
-2. Zip the **contents** of `dist/` (not the folder): `cd dist && zip -r ../sitio.zip .`
-3. In cPanel's File Manager, upload the zip to `public_html` (or the domain's
-   document root), extract it there and delete the zip.
+```
+public_html/
+  .htaccess                     generated from deploy/htaccess, points at the live release
+  releases/20260928-153000-0ebe41f/   one full dist/ per deploy (the newest 5 are kept)
+```
 
-`public/.htaccess` ships inside `dist/`: it serves `404.html` for unknown URLs,
-redirects `http://` and `numis.ar` to `https://www.numis.ar`, and sets cache
-headers (hashed `/_astro/` files forever, everything else revalidated). Enable
-AutoSSL in cPanel for the certificate. If the host is nginx-only (no Apache
-behind it), `.htaccess` is ignored and the same rules must be set in the panel.
+0. Everything in `public_html` except `releases/` (the live `.htaccess`, files
+   from before this CI, anything uploaded by hand) is downloaded and kept for 90
+   days as the run's `server-backup-<n>` artifact. The first run's backup is the
+   whole pre-CI site: restoring its `.htaccess` brings that site back.
+1. The build is uploaded to `releases/<release>.partial` and renamed to
+   `releases/<release>` when complete.
+2. `deploy/htaccess` (with `__RELEASE__` filled in) is uploaded as
+   `.htaccess.new` and renamed over `.htaccess`. From that moment every URL is
+   served from the new release. Visitors never see `/releases/` in a URL, and
+   requesting it directly gives a 404.
+3. Releases beyond the newest 5 are deleted.
+
+**Rollback:** Actions → Deploy → Run workflow, with the name of a release
+still on the server (the `Live:` line of an earlier run). Only the switch runs.
+
+**Setup:** in the GitHub repo, add the `prod` environment with the secrets `FTP_HOST`, `FTP_USER` and
+`FTP_PASSWORD` (Settings → Environments). The connection
+uses explicit FTPS, so `FTP_HOST` should be the name the server's certificate
+is issued for (often the hosting server's hostname, not numis.ar). If the
+document root is not `public_html` in the FTP user's home, set the variable
+`FTP_DIR`.
+
+The root `.htaccess` also serves `404.html` for unknown URLs, redirects
+`http://` and `numis.ar` to `https://www.numis.ar`, adds the trailing slash to
+folder URLs (`/contacto` → `/contacto/`), leaves `.well-known/` alone for
+AutoSSL, and sets cache headers (hashed `_astro/` files forever, everything
+else revalidated). `dist/` has no `.htaccess` of its own, so a manual upload of
+`dist/` needs `deploy/htaccess` adapted by hand. If the host is nginx-only (no
+Apache behind it), `.htaccess` is ignored and the same rules must be set in the
+panel.
 
 ## Design system
 
@@ -115,7 +143,7 @@ load anything from there at runtime. Instead:
 - `src/components/` ports the system's JSX components to `.astro`, keeping the
   Spanish names (`Boton`, `Ticket`, `Puerta`...) so they map 1:1 to the system.
 - `public/` holds the Archivo variable font (with its OFL license), the logos,
-  the favicon, `og.png`, `robots.txt` and `.htaccess`. Images for notes, team
+  the favicon, `og.png` and `robots.txt`. Images for notes, team
   members and projects go in `public/blog/`, `public/equipo/` and
   `public/proyectos/`. `og.png` was rendered once with
   headless Chrome from a throwaway HTML page using the system fonts, colors and
