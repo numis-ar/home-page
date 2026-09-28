@@ -68,3 +68,23 @@ p .enlace{hyphens:manual;-webkit-hyphens:manual;overflow-wrap:anywhere}
 .prosa img{max-width:100%;height:auto}
 .prosa strong{font-weight:var(--peso-fuerte)}
 @media (max-width:480px){.prosa p{text-align:left}}
+
+/* Diagramas en notas (SVG dentro del Markdown): heredan la tipografía y los
+   colores del sitio; ancho natural en escritorio; en móvil no bajan de 520px (el texto seguiría
+   legible) y la figura se desplaza de costado, no la página. */
+.prosa .diagrama{margin:var(--e-6) 0;overflow-x:auto}
+.prosa .diagrama svg{display:block;width:100%;min-width:520px;max-width:680px;height:auto;margin:0 auto;overflow:visible}
+.diag-zona{stroke:none}
+.diag-zona--compra{fill:#F1F0EA}
+.diag-zona--coop{fill:#E9F1EC}
+.diag-zona--taler{fill:#F8EEE7}
+.diag-zona--proveedor{fill:#FFF6DC}
+.diag-curva{fill:none}
+.diag-zona-nombre{fill:var(--gris-texto);font-size:11px;font-weight:var(--peso-fuerte);letter-spacing:.08em;text-transform:uppercase}
+.diag-caja{fill:var(--blanco);stroke:var(--tinta);stroke-width:1.25}
+.diag-nombre{fill:var(--tinta);font-size:16px;font-weight:var(--peso-fuerte)}
+.diag-linea{stroke:var(--gris-texto);stroke-width:1.5}
+.diag-punta{fill:var(--gris-texto)}
+.diag-circulo{fill:var(--naranja)}
+.diag-num{fill:var(--blanco);font-size:12px;font-weight:var(--peso-fuerte)}
+.diag-etiqueta{fill:var(--gris-texto);font-family:monospace;font-size:12px}
