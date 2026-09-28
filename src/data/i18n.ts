@@ -14,16 +14,31 @@ export type Idioma = (typeof IDIOMAS)[number];
 /** Prefijo de ruta del idioma: "" para el idioma por omisión (es), "/en", "/pt". */
 export const prefijo = (idioma: Idioma): string => (idioma === "es" ? "" : `/${idioma}`);
 
-/** Una ruta relativa a la raíz en el idioma pedido: conLocale("en", "/blog") -> "/en/blog". */
-export const conLocale = (idioma: Idioma, ruta: string): string => `${prefijo(idioma)}${ruta}`;
+/**
+ * Páginas cuyo nombre cambia con el idioma, por su ruta en español. Tienen que
+ * coincidir con los archivos de src/pages/<idioma>/; las rutas viejas redirigen
+ * con 301 desde deploy/htaccess.
+ */
+const RUTAS_TRADUCIDAS: Record<Idioma, Record<string, string>> = {
+  es: {},
+  en: { "/nosotros": "/about", "/contacto": "/contact", "/privacidad": "/privacy" },
+  pt: {},
+};
+
+/** Cambia el primer segmento de la ruta según la tabla; deja igual subrutas, ?consulta y #ancla. */
+const traducirRuta = (ruta: string, tabla: Record<string, string>): string =>
+  ruta.replace(/^\/[^/?#]+/, (segmento) => tabla[segmento] ?? segmento);
+
+/** Una ruta en español, relativa a la raíz, en el idioma pedido: conLocale("en", "/nosotros") -> "/en/about". */
+export const conLocale = (idioma: Idioma, ruta: string): string =>
+  `${prefijo(idioma)}${traducirRuta(ruta, RUTAS_TRADUCIDAS[idioma])}`;
 
 /** `Astro.url.pathname` de la página actual traducido a otro idioma. */
 export const rutaEnIdioma = (pathname: string, idioma: Idioma): string => {
-  const raiz = IDIOMAS.filter((i) => i !== "es").reduce(
-    (ruta, i) => ruta.replace(new RegExp(`^/${i}(?=/|$)`), ""),
-    pathname,
-  );
-  return conLocale(idioma, raiz === "" ? "/" : raiz);
+  const origen = IDIOMAS.find((i) => i !== "es" && new RegExp(`^/${i}(?=/|$)`).test(pathname)) ?? "es";
+  const raiz = pathname.slice(prefijo(origen).length) || "/";
+  const aEspanol = Object.fromEntries(Object.entries(RUTAS_TRADUCIDAS[origen]).map(([es, otra]) => [otra, es]));
+  return conLocale(idioma, traducirRuta(raiz, aEspanol));
 };
 
 /** Etiqueta de Intl para fechas, por idioma. */

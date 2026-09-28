@@ -74,4 +74,4 @@ All the work can be followed in anden's GIT repository: [git.taler.net/anden](ht
 
 If you travel long-distance by bus, you know what we're talking about: those nights at the terminal staring at a ticket that says "10 to 28", and those 300-kilometer naps with one eye open in case we're arriving.
 
-anden is built for those trips. When road testing starts, we'll be looking for passengers who want to get on and try it: [write to us](/en/contacto) and we'll take you along.
+anden is built for those trips. When road testing starts, we'll be looking for passengers who want to get on and try it: [write to us](/en/contact) and we'll take you along.

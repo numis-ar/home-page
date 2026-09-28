@@ -12,6 +12,12 @@ no UI framework. Pages:
 - `/blog`: published notes, newest first. With none published it says so in one sentence.
 - `/blog/<slug>`: one page per **published** note. `/blog/rss.xml`: RSS feed of the published notes.
 - `/404`: not found page ("Esta página no existe."), built as `dist/404.html`. The hosting must serve it for unknown URLs.
+- `/humans.txt`: team, cooperative and stack, built from the `equipo` collection (`src/pages/humans.txt.ts`).
+
+English and Portuguese live under `/en` and `/pt`. A page name can change with
+the language (`RUTAS_TRADUCIDAS` in `src/data/i18n.ts`): in English they are
+`/en/about`, `/en/contact` and `/en/privacy`, and the old Spanish names 301 to
+them from `deploy/htaccess`. Links always pass the Spanish path to `conLocale`.
 
 The canonical origin is `https://www.numis.ar` (`site` in `astro.config.mjs`;
 `numis.ar` 301-redirects there). `@astrojs/sitemap` writes

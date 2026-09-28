@@ -42,6 +42,12 @@ ErrorDocument 404 /releases/__RELEASE__/404.html
   RewriteCond %{ENV:REDIRECT_STATUS} ^$
   RewriteRule ^releases(/|$) - [R=404,L]
 
+  # English pages had Spanish names until 2026-09 (RUTAS_TRADUCIDAS in
+  # src/data/i18n.ts): old links keep working. The query string is kept.
+  RewriteRule ^en/nosotros/?$ https://www.numis.ar/en/about/ [R=301,L]
+  RewriteRule ^en/contacto/?$ https://www.numis.ar/en/contact/ [R=301,L]
+  RewriteRule ^en/privacidad/?$ https://www.numis.ar/en/privacy/ [R=301,L]
+
   # A folder without its trailing slash: /contacto -> /contacto/
   RewriteCond %{REQUEST_URI} !^/releases/
   RewriteCond %{DOCUMENT_ROOT}/releases/__RELEASE__/$1 -d
