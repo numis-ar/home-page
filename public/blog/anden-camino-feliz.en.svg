@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 800" role="img" aria-labelledby="titulo" font-family="system-ui, 'Segoe UI', Roboto, sans-serif">
+  <title id="titulo">Sequence diagram of the happy path of a trip with anden: the passenger scans the ticket, the app queries the server, the bus reports its position anonymously and the alarm rings before the stop.</title>
+  <defs>
+    <marker id="fT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#343434"/>
+    </marker>
+    <marker id="fG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7A7A7A"/>
+    </marker>
+  </defs>
+
+  <!-- Actors -->
+  <rect x="45" y="16" width="170" height="46" rx="8" fill="#FBFBF8" stroke="#064D2D" stroke-width="1.5"/>
+  <text x="130" y="45" text-anchor="middle" font-size="15" font-weight="600" fill="#064D2D">Passenger</text>
+  <rect x="385" y="16" width="170" height="46" rx="8" fill="#064D2D"/>
+  <text x="470" y="38" text-anchor="middle" font-size="15" font-weight="600" fill="#FFFFFF">Android app</text>
+  <text x="470" y="55" text-anchor="middle" font-size="11" fill="#CFE3D8">Kotlin</text>
+  <rect x="745" y="16" width="170" height="46" rx="8" fill="#064D2D"/>
+  <text x="830" y="38" text-anchor="middle" font-size="15" font-weight="600" fill="#FFFFFF">Server</text>
+  <text x="830" y="55" text-anchor="middle" font-size="11" fill="#CFE3D8">Rust + PostGIS</text>
+
+  <!-- Lifelines -->
+  <line x1="130" y1="62" x2="130" y2="790" stroke="#CFCEC6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="470" y1="62" x2="470" y2="790" stroke="#CFCEC6" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="830" y1="62" x2="830" y2="790" stroke="#CFCEC6" stroke-width="1" stroke-dasharray="4 4"/>
+
+  <!-- 1. scans the ticket -->
+  <text x="296" y="98" text-anchor="middle" font-size="12.5" fill="#343434">scans the ticket</text>
+  <line x1="130" y1="104" x2="461" y2="104" stroke="#343434" stroke-width="1.5" fill="none" marker-end="url(#fT)"/>
+
+  <!-- 2. GET /search -->
+  <text x="650" y="134" text-anchor="middle" font-size="12.5" font-weight="700" fill="#DC5A1E">GET /search</text>
+  <line x1="470" y1="140" x2="821" y2="140" stroke="#343434" stroke-width="1.5" fill="none" marker-end="url(#fT)"/>
+
+  <!-- 3. matching trip -->
+  <text x="650" y="170" text-anchor="middle" font-size="12.5" fill="#7A7A7A">matching trip</text>
+  <line x1="830" y1="176" x2="479" y2="176" stroke="#7A7A7A" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#fG)"/>
+
+  <!-- 4. leaves 9:30 pm -->
+  <text x="296" y="206" text-anchor="middle" font-size="12.5" fill="#7A7A7A">“leaves 9:30 pm · gate 12”</text>
+  <line x1="470" y1="212" x2="139" y2="212" stroke="#7A7A7A" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#fG)"/>
+
+  <!-- 5. GET /trips/{id}/status -->
+  <text x="650" y="248" text-anchor="middle" font-size="12.5"><tspan font-weight="700" fill="#DC5A1E">GET /trips/{id}/status</tspan><tspan font-size="11" fill="#7A7A7A"> · every so often</tspan></text>
+  <line x1="470" y1="254" x2="821" y2="254" stroke="#343434" stroke-width="1.5" fill="none" marker-end="url(#fT)"/>
+
+  <!-- 6. delay from riders on board -->
+  <text x="650" y="284" text-anchor="middle" font-size="12.5" fill="#7A7A7A">delay from riders on board</text>
+  <line x1="830" y1="290" x2="479" y2="290" stroke="#7A7A7A" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#fG)"/>
+
+  <!-- 7. running 40 min late -->
+  <text x="296" y="320" text-anchor="middle" font-size="12.5" fill="#7A7A7A">“running 40 min late”</text>
+  <line x1="470" y1="326" x2="139" y2="326" stroke="#7A7A7A" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#fG)"/>
+
+  <!-- 8. boards the bus -->
+  <text x="296" y="362" text-anchor="middle" font-size="12.5" fill="#343434">boards the bus</text>
+  <line x1="130" y1="368" x2="461" y2="368" stroke="#343434" stroke-width="1.5" fill="none" marker-end="url(#fT)"/>
+
+  <!-- 9. own GPS -->
+  <path d="M470,404 L486,404 L486,426 L472,426" stroke="#343434" stroke-width="1.5" fill="none" marker-end="url(#fT)"/>
+  <rect x="500" y="388" width="220" height="40" rx="6" fill="#FBFBF8" stroke="#CFCEC6" stroke-width="1"/>
+  <text x="610" y="404" text-anchor="middle" font-size="11.5" fill="#343434">own GPS: projects</text>
+  <text x="610" y="420" text-anchor="middle" font-size="11.5" fill="#343434">each point onto the route</text>
+
+  <!-- 10. POST /reports -->
+  <text x="650" y="452" text-anchor="middle" font-size="12.5"><tspan font-weight="700" fill="#DC5A1E">POST /reports</tspan><tspan font-size="11" fill="#7A7A7A"> · every ~5 min</tspan></text>
+  <line x1="470" y1="458" x2="821" y2="458" stroke="#343434" stroke-width="1.5" fill="none" marker-end="url(#fT)"/>
+
+  <!-- 11. server processing -->
+  <path d="M830,502 L814,502 L814,528 L828,528" stroke="#343434" stroke-width="1.5" fill="none" marker-end="url(#fT)"/>
+  <rect x="574" y="486" width="228" height="44" rx="6" fill="#FBFBF8" stroke="#CFCEC6" stroke-width="1"/>
+  <text x="688" y="503" text-anchor="middle" font-size="11.5" fill="#343434">snap to route · delay = median</text>
+  <text x="688" y="519" text-anchor="middle" font-size="11.5" fill="#343434">notify waiting riders</text>
+
+  <!-- 12. 202 -->
+  <text x="650" y="552" text-anchor="middle" font-size="12.5" fill="#7A7A7A">202 · valid samples</text>
+  <line x1="830" y1="558" x2="479" y2="558" stroke="#7A7A7A" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#fG)"/>
+
+  <!-- 13. GET /trips/{id}/status -->
+  <text x="650" y="584" text-anchor="middle" font-size="12.5" font-weight="700" fill="#DC5A1E">GET /trips/{id}/status</text>
+  <line x1="470" y1="590" x2="821" y2="590" stroke="#343434" stroke-width="1.5" fill="none" marker-end="url(#fT)"/>
+
+  <!-- 14. updated delay -->
+  <text x="650" y="614" text-anchor="middle" font-size="12.5" fill="#7A7A7A">updated delay</text>
+  <line x1="830" y1="620" x2="479" y2="620" stroke="#7A7A7A" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#fG)"/>
+
+  <!-- 15. arrive 6:20 am -->
+  <text x="296" y="650" text-anchor="middle" font-size="12.5" fill="#7A7A7A">“arrive 6:20 am”</text>
+  <line x1="470" y1="656" x2="139" y2="656" stroke="#7A7A7A" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#fG)"/>
+
+  <!-- 16. alarm -->
+  <text x="296" y="686" text-anchor="middle" font-size="12.5" fill="#7A7A7A">alarm · 30 min before your stop</text>
+  <line x1="470" y1="692" x2="139" y2="692" stroke="#7A7A7A" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#fG)"/>
+
+  <!-- 17. time to get off! -->
+  <path d="M130,726 L116,726 L116,748 L128,748" stroke="#7A7A7A" stroke-width="1.2" fill="none" stroke-dasharray="5 4" marker-end="url(#fG)"/>
+  <rect x="4" y="712" width="112" height="32" rx="6" fill="#FBFBF8" stroke="#CFCEC6" stroke-width="1"/>
+  <text x="60" y="732" text-anchor="middle" font-size="11.5" fill="#343434">time to get off!</text>
+</svg>

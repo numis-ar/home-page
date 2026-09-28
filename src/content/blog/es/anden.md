@@ -1,5 +1,5 @@
 ---
-titulo: "anden: el andén que no existe"
+titulo: "anden: donde están mi micro?"
 fecha: 2026-09-28
 bajada: Las terminales no saben a qué hora sale tu micro y ninguna empresa publica un dato en vivo. Estamos construyendo anden, una app Android y un servidor en Rust, ambos de software libre, que convierten a los propios pasajeros en el tablero de llegadas que falta.
 autores:
