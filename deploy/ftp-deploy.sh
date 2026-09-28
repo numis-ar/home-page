@@ -11,7 +11,8 @@
 #
 # Environment: FTP_HOST, FTP_USER, FTP_PASSWORD (required); FTP_DIR (default
 # public_html); FTP_TLS (default yes: explicit FTPS); KEEP (default 5);
-# BACKUP_DIR (if set, $FTP_DIR minus releases/ is downloaded there first).
+# BACKUP_DIR (if set, $FTP_DIR minus releases/ is downloaded there first);
+# FTP_DEBUG (if set, print the FTP dialogue; lftp masks the password).
 set -euo pipefail
 
 release="${1:?usage: $0 <release> [dist-dir]}"
@@ -36,6 +37,7 @@ ftp() {
     set net:max-retries 3
     set net:timeout 30
     set ftp:list-options -a
+    ${FTP_DEBUG:+debug 3}
     set ftp:ssl-allow $FTP_TLS
     set ftp:ssl-force $FTP_TLS
     set ftp:ssl-protect-data $FTP_TLS

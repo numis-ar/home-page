@@ -6,7 +6,8 @@
 # on the server (the "Live:" line of an earlier run). Only the switch runs.
 #
 # Secrets (environment "prod"): FTP_HOST, FTP_USER, FTP_PASSWORD. Optional variable: FTP_DIR
-# (default public_html, relative to the FTP user's home).
+# (default public_html, relative to the FTP user's home); FTP_DEBUG=1 prints
+# the FTP dialogue to diagnose connection errors.
 name: Deploy
 
 on:
@@ -34,6 +35,7 @@ jobs:
       FTP_USER: ${{ secrets.FTP_USER }}
       FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
       FTP_DIR: ${{ vars.FTP_DIR || 'public_html' }}
+      FTP_DEBUG: ${{ vars.FTP_DEBUG }}
       ROLLBACK: ${{ inputs.release }}
     steps:
       - uses: actions/checkout@v4
