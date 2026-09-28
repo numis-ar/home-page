@@ -18,8 +18,9 @@ The canonical origin is `https://www.numis.ar` (`site` in `astro.config.mjs`;
 `sitemap-index.xml`, and `public/robots.txt` points to it.
 
 The header, `<main>` and footer live in `src/layouts/Base.astro`, along with
-the metadata: canonical, Open Graph (`public/og.png`, 1200×630), Twitter card
-and the Organization JSON-LD. The header links and default button come from
+the metadata: canonical, Open Graph (one 1200×630 image per language:
+`public/og.png`, `og-en.png`, `og-pt.png`, set in `compartir` in
+`src/data/i18n.ts`), Twitter card and the Organization and WebSite JSON-LD. The header links and default button come from
 `src/data/sitio.ts` (a page can override the button with Base's `accion`
 prop). The header shows at most three links plus that button. "Proyectos"
 and "Blog" only compete for a place while their collection has a published

@@ -57,7 +57,7 @@ const { title, description, idioma = "es", alternativas, accion = accionPrincipa
 const txt = t(idioma);
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const inicio = new URL("/", Astro.site);
-const ogImagen = new URL("/og.png", Astro.site);
+const ogImagen = new URL(txt.compartir.imagen, Astro.site);
 const hayNotas = (await notasVisibles(idioma)).length > 0;
 const enlaces = navegacion(
   { hayProyectos: (await proyectosPublicados(idioma)).length > 0, hayNotas },
@@ -126,10 +126,7 @@ const sitioWeb = {
     <meta property="og:image" content={ogImagen} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content="Logo de Numis, la frase «Pagos con reglas que se pueden ver.» y el lema «finanzas para todas las personas»."
-    />
+    <meta property="og:image:alt" content={txt.compartir.imagenAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(organizacion)} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(sitioWeb)} />

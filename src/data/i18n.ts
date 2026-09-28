@@ -38,6 +38,11 @@ const es = {
     navAria: "Principal",
     logoAlt: "Numis, inicio",
   },
+  /** Open Graph image shown when a page is shared (public/og*.png). */
+  compartir: {
+    imagen: "/og.png",
+    imagenAlt: "Logo de Numis, la frase «Pagos con reglas que se pueden ver.» y el lema «finanzas para todas las personas».",
+  },
   pie: {
     lema: "finanzas para todas las personas",
     legal: "© 2025 Numis. Hecho con software libre.",
@@ -298,6 +303,10 @@ export const ui: Record<Idioma, Textos> = {
   es,
   en: {
     cabecera: { navAria: "Main", logoAlt: "Numis, home" },
+    compartir: {
+      imagen: "/og-en.png",
+      imagenAlt: "Numis logo, the phrase “Payments with rules you can see.” and the slogan “finance for everyone”.",
+    },
     pie: {
       lema: "finance for everyone",
       legal: "© 2025 Numis. Built with free software.",
@@ -552,6 +561,10 @@ export const ui: Record<Idioma, Textos> = {
   },
   pt: {
     cabecera: { navAria: "Principal", logoAlt: "Numis, início" },
+    compartir: {
+      imagen: "/og-pt.png",
+      imagenAlt: "Logo da Numis, a frase «Pagamentos com regras que se podem ver.» e o lema «finanças para todas as pessoas».",
+    },
     pie: {
       lema: "finanças para todas as pessoas",
       legal: "© 2025 Numis. Feito com software livre.",
